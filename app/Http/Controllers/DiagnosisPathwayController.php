@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Patient\Diagnosis;
+use App\Models\Patient\DiagnosisPathway;
+use App\Models\Room\RoomClass;
+use Illuminate\Http\Request;
+
+class DiagnosisPathwayController extends Controller
+{
+    public function show(Diagnosis $diagnosis)
+    {
+        $pathway = DiagnosisPathway::with(['items.item'])->where('diagnosis_id', $diagnosis->id)->first();
+        $roomClasses = RoomClass::where('is_active', true)->orderBy('display_order')->get();
+
+        if (!$pathway) {
+            return redirect()->back()->with('error', 'Tarif Umum untuk diagnosa ini belum tersedia.');
+        }
+
+        $matrix = [];
+        
+        foreach ($pathway->items as $pathwayItem) {
+            $item = $pathwayItem->item;
+            if (!$item) continue;
+            
+            $type = class_basename($pathwayItem->item_type);
+            
+            $rowData = [
+                'type' => $type,
+                'name' => $item->name,
+                'code' => $item->code ?? $item->item_code ?? '-',
+                'qty' => $pathwayItem->quantity,
+                'tariffs' => [],
+            ];
+
+            foreach ($roomClasses as $rc) {
+                $amount = 0;
+                
+                if ($type === 'RoomTariffType') {
+                    $tariff = \Illuminate\Support\Facades\DB::table('room_tariffs')
+                        ->where('room_class_id', $rc->id)
+                        ->where('room_tariff_type_id', $item->id)
+                        ->where('is_active', true)
+                        ->first();
+                    if ($tariff) $amount = $tariff->amount;
+                } elseif ($type === 'MedicalService') {
+                    $tariff = \Illuminate\Support\Facades\DB::table('service_tariffs')
+                        ->where('room_class_id', $rc->id)
+                        ->where('medical_service_id', $item->id)
+                        ->where('is_active', true)
+                        ->first();
+                    if ($tariff) $amount = $tariff->amount;
+                } elseif ($type === 'Medication') {
+                    $tariff = \Illuminate\Support\Facades\DB::table('medication_tariffs')
+                        ->where('room_class_id', $rc->id)
+                        ->where('medication_id', $item->id)
+                        ->where('is_active', true)
+                        ->first();
+                    if ($tariff) $amount = $tariff->amount;
+                }
+
+                $rowData['tariffs'][$rc->id] = [
+                    'amount' => $amount,
+                    'total' => $amount * $pathwayItem->quantity
+                ];
+            }
+
+            $matrix[] = $rowData;
+        }
+
+        return view('diagnoses.pathway', compact('diagnosis', 'pathway', 'roomClasses', 'matrix'));
+    }
+}

@@ -1,25 +1,11 @@
 /**
- * Sidebar Styles - Smooth transitions without flicker
- * Uses CSS-driven width changes instead of JavaScript DOM manipulation
+ * Sidebar Styles
+ * Single source of truth: Alpine.js controls visibility, CSS handles animation
  */
 
-/* CSS Variables for sidebar width */
-:root {
-    --sidebar-width: 16rem; /* Default: expanded (w-64 = 256px = 16rem) */
-    --sidebar-collapsed-width: 5rem; /* w-20 = 80px = 5rem */
-    --sidebar-transition: width 300ms ease-in-out;
-}
-
-/* Prevent FOUC/flicker: hide dropdowns until Alpine is ready */
-[x-cloak] { 
-    display: none !important; 
-}
-
-/* But sidebar should be visible immediately on desktop */
-@media (min-width: 1024px) {
-    .sidebar[x-cloak] {
-        display: flex !important;
-    }
+/* Prevent FOUC for x-cloak elements */
+[x-cloak] {
+    display: none !important;
 }
 
 /* Global overflow prevention */
@@ -28,82 +14,86 @@ html, body {
     max-width: 100%;
 }
 
-/* Sidebar base styles with CSS-driven width */
+/* ============================================================
+   SIDEBAR ELEMENT
+   - Mobile: slides in/out from left via transform
+   - Desktop sidebar-mode: fixed width, always visible
+   - Desktop appbar-mode: width collapses to 0, hidden
+   ============================================================ */
 .sidebar {
-    width: var(--sidebar-width);
-    transition: var(--sidebar-transition);
-    will-change: width;
-}
-
-/* When collapsed class is on html, sidebar is narrow */
-.sidebar-collapsed .sidebar {
-    width: var(--sidebar-collapsed-width);
-}
-
-/* Text visibility using opacity instead of x-show (no DOM detach) */
-.sidebar-text {
-    opacity: 1;
-    transition: opacity 150ms ease-in-out;
-    white-space: nowrap;
+    flex-shrink: 0;
+    transition: width 300ms ease, opacity 200ms ease, visibility 200ms ease;
     overflow: hidden;
 }
 
-.sidebar-collapsed .sidebar-text {
-    opacity: 0;
-    width: 0;
-    visibility: hidden;
-}
-
-/* Icon margin adjustment */
-.sidebar-icon {
-    transition: margin 150ms ease-in-out;
-}
-
-.sidebar-collapsed .sidebar-icon {
-    margin-right: 0 !important;
-}
-
-/* Custom Scrollbar for Sidebar */
-.sidebar-scroll::-webkit-scrollbar {
-    width: 6px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 10px;
-}
-
-.sidebar-scroll::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
-/* For Firefox */
-.sidebar-scroll {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.2) rgba(255, 255, 255, 0.05);
-}
-
-/* Mobile sidebar - use transform for slide */
+/* Mobile: always off-screen by default, slides in when .mobile-open */
 @media (max-width: 1023px) {
     .sidebar {
+        position: fixed;
+        inset-y: 0;
+        left: 0;
+        width: 16rem;
         transform: translateX(-100%);
         transition: transform 300ms ease-in-out;
-        width: 16rem !important; /* Always full width on mobile */
     }
-    
+
     .sidebar.mobile-open {
         transform: translateX(0);
     }
 }
 
-/* Desktop: sidebar is always visible, just changes width */
+/* Desktop sidebar-mode: normal expanded width */
 @media (min-width: 1024px) {
     .sidebar {
-        transform: translateX(0) !important;
+        position: relative;
+        width: 16rem;
+        transform: none;
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Collapsed (mini) - just icons */
+    .sidebar.sidebar-collapsed-mode {
+        width: 5rem;
+    }
+
+    /* Appbar mode: completely hidden on desktop */
+    .sidebar.appbar-mode {
+        width: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
 }
+
+/* ============================================================
+   SIDEBAR TEXT & ICONS — fade out when collapsed
+   ============================================================ */
+.sidebar-text {
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 150ms ease, width 150ms ease;
+}
+
+.sidebar.sidebar-collapsed-mode .sidebar-text {
+    opacity: 0;
+    width: 0;
+    visibility: hidden;
+}
+
+.sidebar-icon {
+    flex-shrink: 0;
+    transition: margin 150ms ease;
+}
+
+.sidebar.sidebar-collapsed-mode .sidebar-icon {
+    margin-right: 0 !important;
+}
+
+/* ============================================================
+   CUSTOM SCROLLBAR
+   ============================================================ */
+.sidebar-scroll::-webkit-scrollbar { width: 4px; }
+.sidebar-scroll::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px; }
+.sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+.sidebar-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.35); }
+.sidebar-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.2) transparent; }

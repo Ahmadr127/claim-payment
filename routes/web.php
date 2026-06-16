@@ -35,10 +35,17 @@ Route::middleware('guest')->group(function () {
 // Protected routes
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Clinical Pathway Matrix
+    Route::middleware(['permission:manage_clinical_pathway'])->group(function () {
+        Route::get('/diagnoses', [\App\Http\Controllers\DiagnosisController::class, 'index'])->name('diagnoses.index');
+        Route::get('/diagnoses/{diagnosis}/pathway', [\App\Http\Controllers\DiagnosisPathwayController::class, 'show'])->name('diagnoses.pathway');
+    });
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Profile routes
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/profile/toggle-layout', [App\Http\Controllers\ProfileController::class, 'toggleLayout'])->name('profile.toggle-layout');
 
     // User Management routes
     Route::middleware('permission:manage_users')->group(function () {

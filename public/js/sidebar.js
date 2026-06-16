@@ -1,53 +1,82 @@
 /**
  * Sidebar Component for Alpine.js
- * Handles sidebar collapse/expand with separated desktop/mobile logic
+ * Single control system: Alpine manages all state, CSS only animates.
+ * NO CSS variables, NO html class toggling — clean single source of truth.
  */
 
-// CRITICAL: Initialize sidebar state BEFORE Alpine loads to prevent flicker
-(function() {
-    const isCollapsed = localStorage.getItem('sidebarCollapsed') === '1';
-    document.documentElement.style.setProperty('--sidebar-width', isCollapsed ? '5rem' : '16rem');
-    document.documentElement.classList.toggle('sidebar-collapsed', isCollapsed);
+// Prevent FOUC: stamp initial appbar/sidebar class on body BEFORE Alpine loads
+// so the sidebar starts in the correct position immediately on paint.
+(function () {
+    const layout = document.currentScript
+        ? document.currentScript.dataset.layout
+        : null;
+    // We can't easily read server-side pref here without embedding it,
+    // so we use a data attribute placed on the script tag by Blade.
+    // Fallback: read from body data attr if set.
+    const bodyLayout = document.body && document.body.dataset.layout;
+    if (bodyLayout === 'appbar') {
+        // Pre-hide sidebar before Alpine boots so there's zero flash
+        document.documentElement.classList.add('pre-appbar');
+    }
 })();
 
 /**
  * Alpine.js Sidebar Component
- * Usage: x-data="sidebarComponent()" on the main container
+ * @param {string} initialLayout - 'sidebar' | 'appbar' (passed from Blade)
  */
-function sidebarComponent() {
+function sidebarComponent(initialLayout) {
     return {
-        // Desktop state: controlled via CSS class on <html>
-        isCollapsed: document.documentElement.classList.contains('sidebar-collapsed'),
-        
-        // Mobile state: controlled via Alpine
+        isCollapsed: false,
         mobileOpen: false,
-        
+        layoutPref: initialLayout || 'sidebar',
+
         init() {
-            // Sync state from localStorage (already set by inline script above)
+            // Sync collapsed state from localStorage (desktop only)
             this.isCollapsed = localStorage.getItem('sidebarCollapsed') === '1';
+            // Clean up pre-appbar class — Alpine takes over now
+            document.documentElement.classList.remove('pre-appbar');
+            const preStyle = document.getElementById('pre-appbar-style');
+            if (preStyle) preStyle.remove();
         },
-        
+
         toggle() {
             if (window.innerWidth >= 1024) {
-                // Desktop: toggle collapsed state via CSS class AND CSS variable
                 this.isCollapsed = !this.isCollapsed;
-                document.documentElement.classList.toggle('sidebar-collapsed', this.isCollapsed);
-                document.documentElement.style.setProperty('--sidebar-width', this.isCollapsed ? '5rem' : '16rem');
                 localStorage.setItem('sidebarCollapsed', this.isCollapsed ? '1' : '0');
-                
-                // Dispatch event for responsive components
-                document.dispatchEvent(new CustomEvent('sidebar-toggled'));
             } else {
-                // Mobile: toggle open/close
                 this.mobileOpen = !this.mobileOpen;
             }
         },
-        
+
         getToggleTitle() {
             if (window.innerWidth >= 1024) {
                 return this.isCollapsed ? 'Expand sidebar' : 'Collapse sidebar';
             }
-            return this.mobileOpen ? 'Close menu' : 'Open menu';
-        }
-    }
+            return this.mobileOpen ? 'Tutup menu' : 'Buka menu';
+        },
+
+        toggleLayoutPreference(toggleRoute, csrfToken) {
+            this.layoutPref = this.layoutPref === 'appbar' ? 'sidebar' : 'appbar';
+            fetch(toggleRoute, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                },
+            }).catch((err) => console.error(err));
+        },
+
+        // Computed helpers for template bindings
+        get sidebarClasses() {
+            return {
+                'appbar-mode': this.layoutPref === 'appbar',
+                'sidebar-collapsed-mode': this.isCollapsed && this.layoutPref === 'sidebar',
+                'mobile-open': this.mobileOpen,
+            };
+        },
+
+        get showToggleIcon() {
+            return this.layoutPref === 'sidebar';
+        },
+    };
 }

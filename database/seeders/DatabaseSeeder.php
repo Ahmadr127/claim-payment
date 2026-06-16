@@ -13,11 +13,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Call RolePermissionSeeder first
         $this->call([
+            // Auth & Org
             RolePermissionSeeder::class,
             OrganizationTypeSeeder::class,
             OrganizationUnitSeeder::class,
+
+            // Master data — urutan penting: room_classes dulu sebelum service/medication
+            RoomClassSeeder::class,
+            ClaimStatusSeeder::class,
+            ServiceCategorySeeder::class,
+            MedicationSeeder::class,
         ]);
 
         // Create admin user
