@@ -39,8 +39,20 @@ Route::middleware('auth')->group(function () {
     // Clinical Pathway Matrix
     Route::middleware(['permission:manage_clinical_pathway'])->group(function () {
         Route::get('/diagnoses', [\App\Http\Controllers\DiagnosisController::class, 'index'])->name('diagnoses.index');
+        // Static route must come before wildcard {diagnosis} route
+        Route::get('/diagnoses/services/search', [\App\Http\Controllers\DiagnosisPathwayController::class, 'searchServices'])->name('diagnoses.services.search');
         Route::get('/diagnoses/{diagnosis}/pathway', [\App\Http\Controllers\DiagnosisPathwayController::class, 'show'])->name('diagnoses.pathway');
+        Route::post('/diagnoses/{diagnosis}/pathway', [\App\Http\Controllers\DiagnosisPathwayController::class, 'update'])->name('diagnoses.pathway.update');
     });
+
+    Route::middleware(['permission:manage_service_categories'])->group(function () {
+        Route::resource('service-categories', \App\Http\Controllers\ServiceCategoryController::class)->except(['create', 'show', 'edit']);
+    });
+
+    Route::middleware(['permission:manage_services'])->group(function () {
+        Route::resource('services', \App\Http\Controllers\MedicalServiceController::class);
+    });
+
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Profile routes

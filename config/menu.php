@@ -74,4 +74,26 @@ return [
             ],
         ],
     ],
+    [
+        'title' => 'Master Data',
+        'icon' => 'fas fa-database',
+        'permission' => ['manage_service_categories', 'manage_services'],
+        'active' => ['service-categories.*', 'services.*'],
+        'children' => [
+            [
+                'title' => 'Kategori Layanan',
+                'icon' => 'fas fa-tags',
+                'route' => 'service-categories.index',
+                'permission' => 'manage_service_categories',
+                'active' => 'service-categories.*',
+            ],
+            [
+                'title' => 'Layanan Medis',
+                'icon' => 'fas fa-stethoscope',
+                'route' => 'services.index',
+                'permission' => 'manage_services',
+                'active' => 'services.*',
+            ],
+        ],
+    ],
 ];
