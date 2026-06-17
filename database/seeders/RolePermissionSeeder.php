@@ -37,12 +37,26 @@ class RolePermissionSeeder extends Seeder
             ['display_name' => 'Pengguna', 'description' => 'Role untuk pengguna umum']
         );
 
+        $masterDataRole = Role::updateOrCreate(
+            ['name' => 'master_data'],
+            ['display_name' => 'Admin Master Data', 'description' => 'Role untuk mengelola master data layanan dan tarif']
+        );
+
         // Assign permissions to roles
         $adminRole->permissions()->sync(Permission::all()); // Admin gets all permissions
         
         $userRole->permissions()->sync(
             Permission::whereIn('name', [
                 'view_dashboard'
+            ])->pluck('id')->toArray()
+        );
+
+        $masterDataRole->permissions()->sync(
+            Permission::whereIn('name', [
+                'view_dashboard',
+                'manage_service_categories',
+                'manage_services',
+                'manage_clinical_pathway'
             ])->pluck('id')->toArray()
         );
     }

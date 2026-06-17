@@ -24,7 +24,11 @@ class DatabaseSeeder extends Seeder
             ClaimStatusSeeder::class,
             ServiceCategorySeeder::class,
             MedicationSeeder::class,
+            DiagnosisPathwaySeeder::class,
         ]);
+
+        // Clear existing users to only leave what we seed
+        \App\Models\User::truncate();
 
         // Create admin user
         $adminRole = \App\Models\Role::where('name', 'admin')->first();
@@ -35,6 +39,17 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@example.com',
             'password' => \Illuminate\Support\Facades\Hash::make('rsazra'),
             'role_id' => $adminRole->id,
+        ]);
+
+        // Create master data user
+        $masterDataRole = \App\Models\Role::where('name', 'master_data')->first();
+        
+        User::factory()->create([
+            'name' => 'Staff Master Data',
+            'username' => 'staff',
+            'email' => 'staff@example.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('staff123'),
+            'role_id' => $masterDataRole->id,
         ]);
     }
 }
