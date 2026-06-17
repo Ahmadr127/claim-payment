@@ -139,6 +139,13 @@ class DiagnosisPathwayController extends Controller
         $pathway = DiagnosisPathway::where('diagnosis_id', $diagnosis->id)->firstOrFail();
         
         $matrix = $request->input('matrix', []);
+        $adminFeePercentage = $request->input('admin_fee_percentage');
+        
+        if ($adminFeePercentage !== null) {
+            $diagnosis->update([
+                'admin_fee_percentage' => (float) $adminFeePercentage
+            ]);
+        }
         
         // Delete existing items
         $pathway->items()->delete();

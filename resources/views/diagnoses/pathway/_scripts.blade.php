@@ -7,6 +7,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('simulationForm', () => ({
         activeTab: {{ $roomClasses->first()->id ?? 0 }},
         searchQuery: '',
+        adminFeePercentage: {{ $diagnosis->admin_fee_percentage ?? 6.00 }},
 
         matrix: {!! json_encode(collect($matrix)->map(function($row) use ($roomClasses) {
             foreach ($roomClasses as $rc) {
@@ -159,7 +160,10 @@ document.addEventListener('alpine:init', () => {
                     'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
                 },
-                body: JSON.stringify({ matrix: this.matrix })
+                body: JSON.stringify({ 
+                    matrix: this.matrix,
+                    admin_fee_percentage: this.adminFeePercentage
+                })
             })
             .then(res => {
                 if (!res.ok) throw new Error('Network error');
