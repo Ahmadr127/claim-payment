@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Sistem')</title>
+    <title>@yield('title', 'Claim Payment')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="icon" type="image/x-icon" href="{{ asset('images/logo.png') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -39,7 +39,7 @@
                     <div class="bg-white rounded-xl border border-green-200 shadow-sm p-2 flex-shrink-0">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto object-contain">
                     </div>
-                    <h1 class="sidebar-text text-xl font-bold text-white tracking-wide truncate">Sistem</h1>
+                    <h1 class="sidebar-text text-xl font-bold text-white tracking-wide truncate">Claim Payment</h1>
                 </div>
             </div>
 
