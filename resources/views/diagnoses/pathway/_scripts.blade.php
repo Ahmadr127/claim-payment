@@ -100,6 +100,7 @@ document.addEventListener('alpine:init', () => {
                 id: service.id,
                 code: service.code,
                 name: service.name,
+                description: service.description || '-',
                 type: service.type || 'Lainnya',
                 qty: 1,
                 tariffs: tariffs,

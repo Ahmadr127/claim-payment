@@ -33,6 +33,7 @@ class DiagnosisPathwayController extends Controller
                 'id' => $item->id,
                 'type' => $type,
                 'name' => $item->name,
+                'description' => $item->description ?? '-',
                 'code' => $item->code ?? $item->item_code ?? '-',
                 'qty' => $pathwayItem->quantity,
                 'tariffs' => [],
@@ -96,6 +97,7 @@ class DiagnosisPathwayController extends Controller
                     'id'   => $item->id,
                     'code' => $item->code ?? '-',
                     'name' => $item->name,
+                    'description' => $item->description ?? '-',
                     'type' => 'MedicalService',
                     'type_label' => 'Jasa Medis',
                 ];
@@ -111,6 +113,7 @@ class DiagnosisPathwayController extends Controller
                     'id'   => $item->id,
                     'code' => $item->item_code ?? '-',
                     'name' => $item->name,
+                    'description' => $item->description ?? '-',
                     'type' => 'Medication',
                     'type_label' => 'Obat & Alkes',
                 ];
@@ -126,6 +129,7 @@ class DiagnosisPathwayController extends Controller
                     'id'   => $item->id,
                     'code' => $item->code ?? '-',
                     'name' => $item->name,
+                    'description' => $item->description ?? '-',
                     'type' => 'RoomTariffType',
                     'type_label' => 'Tarif Kamar',
                 ];

@@ -40,6 +40,7 @@
                         <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">NO</th>
                         <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">KODE ICD-10</th>
                         <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">NAMA DIAGNOSA</th>
+                        <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">DESKRIPSI</th>
                         <th scope="col" class="px-6 py-4 text-center font-semibold text-gray-500 uppercase tracking-wider">STATUS TARIF</th>
                         <th scope="col" class="px-6 py-4 text-right font-semibold text-gray-500 uppercase tracking-wider">AKSI</th>
                     </tr>
@@ -50,6 +51,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-gray-500">{{ $diagnoses->firstItem() + $index }}</td>
                             <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $diagnosis->icd_code }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-600">{{ $diagnosis->name }}</td>
+                            <td class="px-6 py-4 text-gray-500 text-sm truncate max-w-xs" title="{{ $diagnosis->description }}">{{ $diagnosis->description ?? '-' }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 @php
                                     $hasPathway = \App\Models\Patient\DiagnosisPathway::where('diagnosis_id', $diagnosis->id)->exists();
@@ -76,7 +78,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-6 py-12 whitespace-nowrap text-center">
+                            <td colspan="6" class="px-6 py-12 whitespace-nowrap text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-500">
                                     <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                     <p class="text-sm">Data diagnosa tidak ditemukan.</p>
