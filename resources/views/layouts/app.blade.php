@@ -278,14 +278,15 @@
                                 </a>
                                 <div class="border-t border-gray-100 my-1"></div>
 
+                                @if(auth()->user()->role->name === 'admin')
                                 {{-- Layout Toggle --}}
                                 <button @click="toggleLayoutPreference('{{ route('profile.toggle-layout') }}', '{{ csrf_token() }}')"
                                         class="flex w-full items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                     <i class="fas w-4 text-gray-400" :class="layoutPref === 'sidebar' ? 'fa-table-columns' : 'fa-sidebar'"></i>
                                     <span x-text="layoutPref === 'sidebar' ? 'Gunakan Appbar' : 'Gunakan Sidebar'"></span>
                                 </button>
-
                                 <div class="border-t border-gray-100 my-1"></div>
+                                @endif
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <button type="submit"

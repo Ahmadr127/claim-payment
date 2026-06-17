@@ -18,8 +18,18 @@ class ProfileController extends Controller
     public function toggleLayout()
     {
         $user = auth()->user();
-        $user->layout_preference = $user->layout_preference === 'appbar' ? 'sidebar' : 'appbar';
-        $user->save();
+        
+        if ($user->role->name !== 'admin') {
+            return response()->json(['status' => 'error', 'message' => 'Unauthorized'], 403);
+        }
+
+        $newLayout = $user->layout_preference === 'appbar' ? 'sidebar' : 'appbar';
+        
+        // Update for all users
+        \App\Models\User::query()->update(['layout_preference' => $newLayout]);
+
+        // Refresh current user model
+        $user->refresh();
 
         return response()->json(['status' => 'success', 'layout' => $user->layout_preference]);
     }
