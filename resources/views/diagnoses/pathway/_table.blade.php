@@ -5,7 +5,6 @@
             <tr>
                 <th class="px-6 py-4 text-center font-semibold text-gray-600 w-16">NO</th>
                 <th class="px-6 py-4 text-left font-semibold text-gray-600">ITEM LAYANAN</th>
-                <th class="px-6 py-4 text-left font-semibold text-gray-600">DESKRIPSI</th>
                 <th class="px-6 py-4 text-center font-semibold text-gray-600 w-24">QTY</th>
                 <th class="px-6 py-4 text-center font-semibold text-gray-600 w-32">KODE</th>
                 <th class="px-6 py-4 text-right font-semibold text-gray-600 w-48">HARGA SATUAN (Rp)</th>
@@ -23,7 +22,6 @@
                         <i class="fas fa-star text-amber-400 text-xs" title="Layanan Tambahan"></i>
                     </td>
                     <td class="px-6 py-4 text-gray-800 font-medium" x-text="matrix[index].name"></td>
-                    <td class="px-6 py-4 text-gray-500 text-sm" x-text="matrix[index].description || '-'"></td>
                     <td class="px-6 py-4 text-center">
                         <input type="number"
                                x-model.number="matrix[index].qty"
@@ -70,7 +68,7 @@
                     @php $currentType = $row['type']; @endphp
                     <tr x-show="hasAnyMatchInType('{{ $currentType }}')" class="bg-slate-50/70 border-y border-gray-200">
                         <td></td>
-                        <td colspan="7" class="px-6 py-3 font-bold uppercase text-teal-800 text-xs tracking-wider">
+                        <td colspan="6" class="px-6 py-3 font-bold uppercase text-teal-800 text-xs tracking-wider">
                             @if($currentType === 'RoomTariffType') TARIF KAMAR &amp; PERAWATAN
                             @elseif($currentType === 'MedicalService') JASA MEDIS &amp; TINDAKAN
                             @elseif($currentType === 'Medication') ALKES DAN OBAT RUANG RAWAT (CONSUMABLE)
@@ -82,7 +80,6 @@
                 <tr x-show="matchesSearch({{ $index }})" class="hover:bg-slate-50 transition-colors">
                     <td class="px-6 py-4 text-center text-gray-500 font-medium">{{ $loop->iteration }}</td>
                     <td class="px-6 py-4 text-gray-800 font-medium">{{ $row['name'] }}</td>
-                    <td class="px-6 py-4 text-gray-500 text-sm">{{ $row['description'] ?? '-' }}</td>
                     <td class="px-6 py-4 text-center">
                         <input type="number"
                                x-model.number="matrix[{{ $index }}].qty"
