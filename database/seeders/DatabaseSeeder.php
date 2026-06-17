@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Staff Master Data',
             'username' => 'staff',
             'email' => 'staff@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('staff123'),
+            'password' => \Illuminate\Support\Facades\Hash::make('rsazra'),
             'role_id' => $masterDataRole->id,
         ]);
     }
