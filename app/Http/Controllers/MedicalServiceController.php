@@ -26,7 +26,7 @@ class MedicalServiceController extends Controller
                 return $query->where('service_category_id', $categoryId);
             })
             ->orderBy('name')
-            ->paginate(15);
+            ->paginate(10);
 
         $categories = ServiceCategory::where('is_active', true)->orderBy('name')->get();
 
