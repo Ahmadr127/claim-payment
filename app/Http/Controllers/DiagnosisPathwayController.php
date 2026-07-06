@@ -102,6 +102,13 @@ class DiagnosisPathwayController extends Controller
             ->limit(15)
             ->get()
             ->each(function ($item) use (&$results) {
+                $tariffs = \Illuminate\Support\Facades\DB::table('service_tariffs')
+                    ->where('medical_service_id', $item->id)
+                    ->where('is_active', true)
+                    ->get()
+                    ->pluck('amount', 'room_class_id')
+                    ->toArray();
+
                 $results[] = [
                     'id'   => $item->id,
                     'code' => $item->code ?? '-',
@@ -109,6 +116,7 @@ class DiagnosisPathwayController extends Controller
                     'type' => 'MedicalService',
                     'type_label' => 'Jasa Medis',
                     'percentage' => $item->percentage ?? 70,
+                    'tariffs' => $tariffs,
                 ];
             });
 
@@ -135,12 +143,20 @@ class DiagnosisPathwayController extends Controller
             ->limit(10)
             ->get()
             ->each(function ($item) use (&$results) {
+                $tariffs = \Illuminate\Support\Facades\DB::table('room_tariffs')
+                    ->where('room_tariff_type_id', $item->id)
+                    ->where('is_active', true)
+                    ->get()
+                    ->pluck('amount', 'room_class_id')
+                    ->toArray();
+
                 $results[] = [
                     'id'   => $item->id,
                     'code' => $item->code ?? '-',
                     'name' => $item->name,
                     'type' => 'RoomTariffType',
                     'type_label' => 'Tarif Kamar',
+                    'tariffs' => $tariffs,
                 ];
             });
 
@@ -171,9 +187,30 @@ class DiagnosisPathwayController extends Controller
         $matrix = $request->input('matrix', []);
         $this->saveMatrixData($pathway, $matrix);
 
+        $user = \Illuminate\Support\Facades\Auth::user();
+        $unitCostRedirect = '';
+
+        if ($request->input('assign_to_unit')) {
+            if ($user && $user->organization_unit_id) {
+                \App\Models\UnitCost\UnitCostAssignment::create([
+                    'diagnosis_id' => $diagnosis->id,
+                    'organization_unit_id' => $user->organization_unit_id,
+                    'is_active' => true,
+                    'assigned_by' => $user->id,
+                    'assigned_at' => now(),
+                ]);
+                $unitCostRedirect = route('unit-cost.simulation.show', [$user->organization_unit_id, $diagnosis->id]);
+            }
+        } elseif ($user && $user->organization_unit_id) {
+            $unitCostRedirect = route('unit-cost.simulation.show', [$user->organization_unit_id, $diagnosis->id]);
+        }
+
         return response()->json([
+            'success' => true,
             'message' => 'Diagnosa dan simulasi tarif berhasil dibuat.',
-            'redirect' => route('diagnoses.pathway', $diagnosis->id)
+            'diagnosis_id' => $diagnosis->id,
+            'redirect' => route('diagnoses.pathway', $diagnosis->id),
+            'unit_cost_redirect' => $unitCostRedirect,
         ]);
     }
 

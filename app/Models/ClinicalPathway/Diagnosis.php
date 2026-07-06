@@ -20,4 +20,12 @@ class Diagnosis extends Model
     {
         return $this->hasOne(DiagnosisPathway::class);
     }
+
+    /**
+     * Get the unit cost assignments for this diagnosis
+     */
+    public function unitCostAssignments()
+    {
+        return $this->hasMany(\App\Models\UnitCost\UnitCostAssignment::class);
+    }
 }

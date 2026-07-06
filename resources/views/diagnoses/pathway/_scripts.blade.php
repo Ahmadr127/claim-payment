@@ -93,7 +93,16 @@ document.addEventListener('alpine:init', () => {
         addService(service) {
             let tariffs = {};
             @foreach($roomClasses as $rc)
-            tariffs[{{ $rc->id }}] = { amount: 0, amount_formatted: '0', total: 0 };
+            {
+                let amountVal = (service.tariffs && service.tariffs[{{ $rc->id }}])
+                    ? parseFloat(service.tariffs[{{ $rc->id }}])
+                    : 0;
+                tariffs[{{ $rc->id }}] = {
+                    amount: amountVal,
+                    amount_formatted: this.formatCurrency(amountVal),
+                    total: amountVal * 1
+                };
+            }
             @endforeach
 
             this.matrix.push({

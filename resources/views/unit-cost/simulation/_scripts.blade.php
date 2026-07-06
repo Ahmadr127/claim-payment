@@ -7,6 +7,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('unitCostSimulationForm', () => ({
         activeTab: {{ $roomClasses->first()->id ?? 0 }},
         searchQuery: '',
+        adminFeePercentage: {{ $diagnosis->admin_fee_percentage ?? 6.00 }},
         categoryTotals: {},
         matrix: [],
 
@@ -226,9 +227,17 @@ document.addEventListener('alpine:init', () => {
                     amountVal = hnaPpnVal;
                 } else if (service.type === 'MedicalService') {
                     percentageVal = parseFloat(service.percentage) || 70;
-                    baseAmountVal = roomTariffRow ? (roomTariffRow.tariffs[{{ $rc->id }}].amount || 0) : 0;
+                    baseAmountVal = (service.tariffs && service.tariffs[{{ $rc->id }}])
+                        ? parseFloat(service.tariffs[{{ $rc->id }}])
+                        : 0;
                     hnaVal = baseAmountVal; 
                     amountVal = Math.round(baseAmountVal * (percentageVal / 100));
+                } else if (service.type === 'RoomTariffType') {
+                    baseAmountVal = (service.tariffs && service.tariffs[{{ $rc->id }}])
+                        ? parseFloat(service.tariffs[{{ $rc->id }}])
+                        : 0;
+                    hnaVal = baseAmountVal;
+                    amountVal = baseAmountVal;
                 }
 
                 tariffs[{{ $rc->id }}] = {
@@ -300,6 +309,7 @@ document.addEventListener('alpine:init', () => {
 
         saveDraft() {
             const draftData = {
+                admin_fee_percentage: this.adminFeePercentage,
                 items: this.matrix.map((row, idx) => ({
                     index: idx,
                     id: row.id,

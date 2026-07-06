@@ -124,13 +124,21 @@ class UnitCostSimulationController extends Controller
             return redirect()->back()->with('error', 'Anda tidak memiliki unit organisasi yang terkait.');
         }
 
-        $assignments = UnitCostAssignment::with(['diagnosis', 'assignedBy'])
+        $search = $request->input('q');
+
+        $assignments = UnitCostAssignment::with(['diagnosis', 'assignedBy', 'customizedBy'])
             ->where('organization_unit_id', $organizationUnit->id)
             ->where('is_active', true)
+            ->when($search, function ($query, $search) {
+                return $query->whereHas('diagnosis', function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('icd_code', 'like', "%{$search}%");
+                });
+            })
             ->orderBy('assigned_at', 'desc')
             ->get();
 
-        return view('unit-cost.index', compact('organizationUnit', 'assignments'));
+        return view('unit-cost.index', compact('organizationUnit', 'assignments', 'search'));
     }
 
     /**
@@ -174,6 +182,14 @@ class UnitCostSimulationController extends Controller
 
         // Update assignment with the customized data
         $user = \Illuminate\Support\Facades\Auth::user();
+        
+        $adminFeePercentage = $request->input('admin_fee_percentage');
+        if ($adminFeePercentage !== null) {
+            $diagnosis->update([
+                'admin_fee_percentage' => (float) $adminFeePercentage
+            ]);
+        }
+
         $assignment->update([
             'customized_data' => $request->input('items'),
             'is_customized' => true,

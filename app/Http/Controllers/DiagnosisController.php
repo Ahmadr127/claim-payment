@@ -9,7 +9,8 @@ class DiagnosisController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Diagnosis::with(['creator', 'editor']);
+        $query = Diagnosis::whereDoesntHave('unitCostAssignments')
+            ->with(['creator', 'editor']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;
