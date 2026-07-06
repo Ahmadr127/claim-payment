@@ -83,6 +83,27 @@
                         </div>
                     </div>
                 </div>
+                
+                {{-- Pricing & PPN Section --}}
+                <div class="border-t border-gray-200 mt-6 pt-6" x-data="{ hna: {{ old('hna', 0) }}, ppn: {{ old('ppn_percentage', 11) }} }">
+                    <h3 class="text-sm font-semibold text-gray-800 mb-4">Informasi Harga & PPN</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900">HNA (Harga Netto Apotek) (Rp)</label>
+                            <input type="number" name="hna" x-model.number="hna" min="0" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5" placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900">PPN (%)</label>
+                            <input type="number" name="ppn_percentage" x-model.number="ppn" min="0" max="100" step="0.01" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5" placeholder="11">
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 text-gray-500">HNA + PPN (Otomatis)</label>
+                            <div class="bg-slate-100 border border-gray-200 text-gray-700 text-sm rounded-lg block w-full p-2.5 font-bold">
+                                Rp <span x-text="new Intl.NumberFormat('id-ID').format(Math.round(hna * (1 + ppn / 100)))">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -30,6 +30,16 @@ class Role extends Model
         if (is_string($permission)) {
             return $this->permissions->contains('name', $permission);
         }
-        return !!$permission->intersect($this->permissions)->count();
+        
+        if (is_array($permission)) {
+            foreach ($permission as $perm) {
+                if ($this->permissions->contains('name', $perm)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
+        return false;
     }
 }

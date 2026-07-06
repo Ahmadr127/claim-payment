@@ -14,13 +14,13 @@ class ServiceGroupSeeder extends Seeder
     public function run(): void
     {
         $groups = [
-            ['code' => 'perawatan_umum',        'name' => 'Jasa Perawatan Umum',                   'display_order' => 1],
-            ['code' => 'visit_spesialis',        'name' => 'Jasa Visit Dokter Spesialis',           'display_order' => 2],
-            ['code' => 'visite_umum',            'name' => 'Jasa Visite Dokter Umum Ruangan',       'display_order' => 3],
-            ['code' => 'konsultasi_spesialis',   'name' => 'Jasa Konsultasi Dokter Spesialis',      'display_order' => 4],
-            ['code' => 'laboratorium',           'name' => 'Laboratorium',                          'display_order' => 5],
-            ['code' => 'radiologi',              'name' => 'Radiologi',                             'display_order' => 6],
-            ['code' => 'tindakan_medis',         'name' => 'Tindakan Medis',                        'display_order' => 7],
+            ['code' => '10',    'name' => 'Jasa Perawatan Umum',                   'display_order' => 1],
+            ['code' => '20',    'name' => 'Jasa Visit Dokter Spesialis',           'display_order' => 2],
+            ['code' => '30',    'name' => 'Jasa Visite Dokter Umum Ruangan',       'display_order' => 3],
+            ['code' => '40',    'name' => 'Jasa Konsultasi Dokter Spesialis',      'display_order' => 4],
+            ['code' => '50',    'name' => 'Laboratorium',                          'display_order' => 5],
+            ['code' => '60',    'name' => 'Radiologi',                             'display_order' => 6],
+            ['code' => '70',    'name' => 'Tindakan Medis',                        'display_order' => 7],
         ];
 
         foreach ($groups as $group) {
@@ -35,13 +35,13 @@ class ServiceGroupSeeder extends Seeder
 
         // Layanan medis spesifik (dari tabel RS Azra)
         $services = [
-            ['group' => 'visit_spesialis',      'code' => 'VISIT-SPESIALIS-ANAK',  'name' => 'Jasa Visit Dokter Spesialis Anak',           'unit' => 'kali'],
-            ['group' => 'visite_umum',          'code' => 'VISITE-DOKTER-UMUM',    'name' => 'Jasa Visite Dokter Umum Ruangan',            'unit' => 'kali'],
-            ['group' => 'konsultasi_spesialis', 'code' => 'KONSUL-BEDAH-UMUM',     'name' => 'Jasa Konsultasi Dokter Spesialis Bedah Umum', 'unit' => 'kali'],
-            ['group' => 'laboratorium',         'code' => 'LAB-HEMATOLOGI',         'name' => 'Hematologi Lengkap',                         'unit' => 'paket'],
-            ['group' => 'laboratorium',         'code' => 'LAB-URINE',              'name' => 'Urine Lengkap',                              'unit' => 'paket'],
-            ['group' => 'laboratorium',         'code' => 'LAB-CRP-KUANTITATIF',    'name' => 'CRP Kuantitatif',                            'unit' => 'paket'],
-            ['group' => 'radiologi',            'code' => 'RAD-USG-ABDOMEN',        'name' => 'USG Abdomen',                                'unit' => 'paket'],
+            ['group' => '20',   'code' => '2001',  'name' => 'Jasa Visit Dokter Spesialis Anak',           'unit' => 'kali'],
+            ['group' => '30',   'code' => '2002',  'name' => 'Jasa Visite Dokter Umum Ruangan',            'unit' => 'kali'],
+            ['group' => '40',   'code' => '2003',  'name' => 'Jasa Konsultasi Dokter Spesialis Bedah Umum', 'unit' => 'kali'],
+            ['group' => '50',   'code' => '2004',  'name' => 'Hematologi Lengkap',                         'unit' => 'paket'],
+            ['group' => '50',   'code' => '2005',  'name' => 'Urine Lengkap',                              'unit' => 'paket'],
+            ['group' => '50',   'code' => '2006',  'name' => 'CRP Kuantitatif',                            'unit' => 'paket'],
+            ['group' => '60',   'code' => '2007',  'name' => 'USG Abdomen',                                'unit' => 'paket'],
         ];
 
         foreach ($services as $svc) {
@@ -59,18 +59,18 @@ class ServiceGroupSeeder extends Seeder
         }
 
         // Tarif layanan per kelas kamar (dari tabel RS Azra, Januari 2025)
-        // Format: [service_code, SUITES, VVIP, VIP, UTAMA, KELAS_I, KELAS_II, KELAS_III]
+        // Format: [service_code, KELAS_1, KELAS_2, KELAS_3, KELAS_4, KELAS_5, KELAS_6, KELAS_7]
         $tariffs = [
-            ['VISIT-SPESIALIS-ANAK',  840000, 780000, 780000, 690000, 690000, 660000, 630000],
-            ['VISITE-DOKTER-UMUM',    180000, 160000, 160000, 130000, 130000, 120000, 120000],
-            ['KONSUL-BEDAH-UMUM',     280000, 260000, 260000, 280000, 230000, 220000, 210000],
-            ['LAB-HEMATOLOGI',        400000, 358000, 348000, 338000, 338000, 328000, 318000],
-            ['LAB-URINE',             130000, 120000, 110000, 100000, 100000, 100000, 100000],
-            ['LAB-CRP-KUANTITATIF',   360000, 320000, 310000, 300000, 300000, 300000, 300000],
-            ['RAD-USG-ABDOMEN',      1000000, 900000, 900000, 726000, 726000, 726000, 726000],
+            ['2001',  840000, 780000, 780000, 690000, 690000, 660000, 630000],
+            ['2002',  180000, 160000, 160000, 130000, 130000, 120000, 120000],
+            ['2003',  280000, 260000, 260000, 280000, 230000, 220000, 210000],
+            ['2004',  400000, 358000, 348000, 338000, 338000, 328000, 318000],
+            ['2005',  130000, 120000, 110000, 100000, 100000, 100000, 100000],
+            ['2006',  360000, 320000, 310000, 300000, 300000, 300000, 300000],
+            ['2007', 1000000, 900000, 900000, 726000, 726000, 726000, 726000],
         ];
 
-        $classCodes = ['SUITES', 'VVIP', 'VIP', 'UTAMA', 'KELAS_I', 'KELAS_II', 'KELAS_III'];
+        $classCodes = ['1', '2', '3', '4', '5', '6', '7'];
 
         foreach ($tariffs as $tariff) {
             $serviceCode = array_shift($tariff);

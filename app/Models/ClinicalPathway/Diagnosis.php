@@ -12,4 +12,12 @@ class Diagnosis extends Model
     use HasFactory, HasAuditLog, HasAuditColumns;
 
     protected $guarded = ['id'];
+
+    /**
+     * Get the diagnosis pathway
+     */
+    public function pathway()
+    {
+        return $this->hasOne(DiagnosisPathway::class);
+    }
 }

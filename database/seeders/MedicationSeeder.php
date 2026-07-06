@@ -15,10 +15,10 @@ class MedicationSeeder extends Seeder
     {
         // 1. Kategori obat/alkes
         $categories = [
-            ['code' => 'OBAT',     'name' => 'Obat-obatan'],
-            ['code' => 'ALKES',    'name' => 'Alat Kesehatan'],
-            ['code' => 'INFUS',    'name' => 'Cairan Infus'],
-            ['code' => 'KONSUMABLE', 'name' => 'Barang Konsumable'],
+            ['code' => '4001',     'name' => 'Obat-obatan'],
+            ['code' => '4002',    'name' => 'Alat Kesehatan'],
+            ['code' => '4003',    'name' => 'Cairan Infus'],
+            ['code' => '4004', 'name' => 'Barang Konsumable'],
         ];
 
         foreach ($categories as $cat) {
@@ -32,9 +32,9 @@ class MedicationSeeder extends Seeder
 
         // 2. Golongan Obat
         $groups = [
-            ['code' => '8', 'name' => 'OBAT UNTUK TERAPI PALIATIF'],
-            ['code' => '28', 'name' => 'VITAMIN DAN MINERAL'],
-            ['code' => '30', 'name' => 'LAIN - LAIN'],
+            ['code' => '5001', 'name' => 'OBAT UNTUK TERAPI PALIATIF'],
+            ['code' => '5002', 'name' => 'VITAMIN DAN MINERAL'],
+            ['code' => '5003', 'name' => 'LAIN - LAIN'],
         ];
         foreach ($groups as $g) {
             DB::table('medication_groups')->updateOrInsert(
@@ -77,21 +77,21 @@ class MedicationSeeder extends Seeder
 
         // 5. Obat dan alkes dari tabel RS Azra
         $medications = [
-            // [code, name, category, unit, group_code, commodity_name, product_group_name, hna, hna_ppn, ppn_rajal, ppn_ranap, active_ingredient, composition, indication]
-            ['OBTO1259', 'TERFACEF INJ',                    'OBAT',       'vial',   '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 380000.00, 421800.00, 11.00, 11.00, 'Ceftriaxone', 'Ceftriaxone 1g', 'Infeksi bakteri gram negatif berat'],
-            ['OBTO1085', 'PUMPITOR INJ 40 MG',              'OBAT',       'vial',   '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
-            ['OBTO1320', 'TROVENSIS INJ 4 MG',              'OBAT',       'ampul',  '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
-            ['OBTO1099', 'RANTIN INJ',                      'OBAT',       'ampul',  '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
-            ['OBTO0651', 'INTERLAC CHEW TAB',               'OBAT',       'sachet', '28', 'Apotik/Obat Resep (Selain Injeksi)/Ling K', 'ORAL',                  null, null, 0, 0, null, null, null],
-            ['ALK00368', 'HI-FRESH WASH CLOTH',             'KONSUMABLE', 'pcs',    '30', 'Alkes',                                    'KONSUMABLE',            null, null, 0, 0, null, null, null],
-            ['OBTO2246', 'INFUSAN NaCL 100ML SANBE',        'INFUS',      'botol',  '30', 'Cairan Infus',                             'INFUS',                 25000.00, 27750.00, 11.00, 11.00, 'Sodium Chloride', 'NaCl 0.9%', 'Mengganti cairan tubuh yang hilang'],
-            ['ALK00701', 'SPLIT 10CC',                      'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
-            ['ALK00706', 'SPLIT 3CC',                       'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
-            ['ALK01307', 'ALCOHOLSWAB BIRU COSMOMED-JS',    'KONSUMABLE', 'pcs',    '30', 'Alkes',                                    'KONSUMABLE',            null, null, 0, 0, null, null, null],
-            ['ALK00224', 'ELASTOMULL 10CM X 4 MX - JS',     'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
-            ['OBTO2553', 'INFUSAN RL (RL)',                 'INFUS',      'botol',  '30', 'Cairan Infus',                             'INFUS',                 null, null, 0, 0, null, null, null],
-            ['ALK00380', 'INFUS SET',                       'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
-            ['ALK00759', 'SURSHIELD SURFLO II SAFETY NO 22 25', 'ALKES',  'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
+            // [code, name, category, unit, group_code, commodity_name, product_group_name, hna, hna_ppn, ppn_percentage, active_ingredient, composition, indication]
+            ['3001', 'TERFACEF INJ',                    '4001',       'vial',   '5001',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 380000.00, 421800.00, 11.00, 'Ceftriaxone', 'Ceftriaxone 1g', 'Infeksi bakteri gram negatif berat'],
+            ['3002', 'PUMPITOR INJ 40 MG',              '4001',       'vial',   '5001',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 260000.00, 288600.00, 11.00, 'Omeprazole', 'Omeprazole 40mg', 'Terapi jangka pendek untuk ulkus peptikum'],
+            ['3003', 'TROVENSIS INJ 4 MG',              '4001',       'ampul',  '5001',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 30000.00, 33300.00, 11.00, 'Ondansetron', 'Ondansetron 4mg', 'Pencegahan mual muntah paska operasi'],
+            ['3004', 'RANTIN INJ',                      '4001',       'ampul',  '5001',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 40000.00, 44400.00, 11.00, 'Ranitidine', 'Ranitidine 25mg/ml', 'Terapi penyakit refluks gastroesofageal'],
+            ['3005', 'INTERLAC CHEW TAB',               '4001',       'sachet', '5002', 'Apotik/Obat Resep (Selain Injeksi)/Ling K', 'ORAL',                  15000.00, 16650.00, 11.00, 'Lactobacillus reuteri', 'Lactobacillus reuteri Protectis', 'Memelihara kesehatan pencernaan anak'],
+            ['3006', 'HI-FRESH WASH CLOTH',             '4004', 'pcs',    '5003', 'Alkes',                                    'KONSUMABLE',            22000.00, 24420.00, 11.00, null, 'Tisue basah antiseptik', 'Pembersih tubuh pasien tanpa air'],
+            ['3007', 'INFUSAN NaCL 100ML SANBE',        '4003',      'botol',  '5003', 'Cairan Infus',                             'INFUS',                 25000.00, 27750.00, 11.00, 'Sodium Chloride', 'NaCl 0.9%', 'Mengganti cairan tubuh yang hilang'],
+            ['3008', 'SPLIT 10CC',                      '4002',      'pcs',    '5003', 'Alkes',                                    'ALKES',                 10000.00, 11100.00, 11.00, null, 'Spuit 10cc', 'Alat injeksi sekali pakai'],
+            ['3009', 'SPLIT 3CC',                       '4002',      'pcs',    '5003', 'Alkes',                                    'ALKES',                 8000.00, 8880.00, 11.00, null, 'Spuit 3cc', 'Alat injeksi sekali pakai'],
+            ['3010', 'ALCOHOLSWAB BIRU COSMOMED-JS',    '4004', 'pcs',    '5003', 'Alkes',                                    'KONSUMABLE',            700.00, 777.00, 11.00, 'Isopropyl alcohol', 'Alkohol swab 70%', 'Antiseptik kulit sebelum penyuntikan'],
+            ['3011', 'ELASTOMULL 10CM X 4 MX - JS',     '4002',      'pcs',    '5003', 'Alkes',                                    'ALKES',                 18000.00, 19980.00, 11.00, null, 'Perban elastis', 'Pembalut elastis penahan luka'],
+            ['3012', 'INFUSAN RL (RL)',                 '4003',      'botol',  '5003', 'Cairan Infus',                             'INFUS',                 22000.00, 24420.00, 11.00, 'Ringer Lactate', 'Cairan Ringer Laktat', 'Resusitasi cairan tubuh yang hilang'],
+            ['3013', 'INFUS SET',                       '4002',      'pcs',    '5003', 'Alkes',                                    'ALKES',                 15000.00, 16650.00, 11.00, null, 'Selang infus', 'Set penyaluran cairan intravena'],
+            ['3014', 'SURSHIELD SURFLO II SAFETY NO 22 25', '4002',  'pcs',    '5003', 'Alkes',                                    'ALKES',                 35000.00, 38850.00, 11.00, null, 'IV Catheter Safety', 'Jarum infus pengaman'],
         ];
 
         foreach ($medications as $med) {
@@ -106,11 +106,10 @@ class MedicationSeeder extends Seeder
                     'medication_product_group_id' => $getProdGroupId($med[6]),
                     'hna'                         => $med[7],
                     'hna_ppn'                     => $med[8],
-                    'ppn_rajal'                   => $med[9],
-                    'ppn_ranap'                   => $med[10],
-                    'active_ingredient'           => $med[11],
-                    'detailed_composition'        => $med[12],
-                    'indication'                  => $med[13],
+                    'ppn_percentage'              => $med[9],
+                    'active_ingredient'           => $med[10],
+                    'detailed_composition'        => $med[11],
+                    'indication'                  => $med[12],
                     'is_active'                   => true,
                     'created_at'                  => now(),
                     'updated_at'                  => now(),
@@ -121,23 +120,19 @@ class MedicationSeeder extends Seeder
         // 6. Tarif per kelas kamar (dari tabel RS Azra, unit price per item)
         // Format: [item_code, SUITES, VVIP, VIP, UTAMA, KELAS_I, KELAS_II, KELAS_III]
         $tariffs = [
-            ['OBTO1259', 440877, 426181, 426181, 411485, 411485, 411485, 411485],
-            ['OBTO1085', 306054, 295852, 295852, 285650, 285650, 285650, 285650],
-            ['OBTO1320',  36029,  66728,  66728,  64427,  64427,  64427,  64427],
-            ['OBTO1099',  49950,  48285,  48285,  46620,  46620,  46620,  46620],
-            ['OBTO0651',  18870,  18241,  18241,  17612,  17612,  17612,  17612],
-            ['ALK00368',  28305,  27362,  27362,  26418,  26418,  26418,  26418],
-            ['OBTO2246',  31386,  29534,  29534,  28516,  28516,  28516,  28516],
-            ['ALK00701',  13320,  12876,  12876,  12432,  12432,  12432,  12432],
-            ['ALK00706',   9658,   8369,   8369,   8081,   8081,   8081,   8081],
-            ['ALK01307',     804,    777,    777,    750,    750,    750,    750],
-            ['ALK00224',  30116,  29112,  29112,  27104,  27104,  27104,  27104],
-            ['OBTO2553',  38215,  35007,  35007,  33800,  33800,  33800,  33800],
-            ['ALK00380',  21201,  21461,  21461,  20721,  20721,  20721,  20721],
-            ['ALK00759',  11655,  11267,  11267,  10878,  10878,  10878,  10878],
+            ['3001', 440877, 426181, 426181, 411485, 411485, 411485, 411485],
+            ['3002', 306054, 295852, 295852, 285650, 285650, 285650, 285650],
+            ['3003',  36029,  66728,  66728,  64427,  64427,  64427,  64427],
+            ['3004',  49950,  48285,  48285,  46620,  46620,  46620,  46620],
+            ['3005',  18870,  18241,  18241,  17612,  17612,  17612,  17612],
+            ['3006',  28305,  27362,  27362,  26418,  26418,  26418,  26418],
+            ['3007',  31386,  29534,  29534,  28516,  28516,  28516,  28516],
+            ['3008',  13320,  12876,  12876,  12432,  12432,  12432,  12432],
+            ['3009',   9658,   8369,   8369,   8081,   8081,   8081,   8081],
+            ['3010',     804,    777,    777,    750,    750,    750,    750],
         ];
 
-        $classCodes = ['SUITES', 'VVIP', 'VIP', 'UTAMA', 'KELAS_I', 'KELAS_II', 'KELAS_III'];
+        $classCodes = ['1', '2', '3', '4', '5', '6', '7'];
 
         foreach ($tariffs as $tariff) {
             $itemCode    = array_shift($tariff);

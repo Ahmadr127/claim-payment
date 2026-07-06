@@ -22,13 +22,13 @@ class DiagnosisPathwaySeeder extends Seeder
         );
 
         // Get Room Classes
-        $suites = RoomClass::where('code', 'SUITES')->first();
-        $vvip = RoomClass::where('code', 'VVIP')->first();
-        $vip = RoomClass::where('code', 'VIP')->first();
-        $utama = RoomClass::where('code', 'UTAMA')->first();
-        $kelasI = RoomClass::where('code', 'KELAS_I')->first();
-        $kelasII = RoomClass::where('code', 'KELAS_II')->first();
-        $kelasIII = RoomClass::where('code', 'KELAS_III')->first();
+        $suites = RoomClass::where('code', '1')->first();
+        $vvip = RoomClass::where('code', '2')->first();
+        $vip = RoomClass::where('code', '3')->first();
+        $utama = RoomClass::where('code', '4')->first();
+        $kelasI = RoomClass::where('code', '5')->first();
+        $kelasII = RoomClass::where('code', '6')->first();
+        $kelasIII = RoomClass::where('code', '7')->first();
 
         // 1. Create Pathway
         $pathway = DiagnosisPathway::firstOrCreate([
@@ -84,28 +84,29 @@ class DiagnosisPathwaySeeder extends Seeder
             }
         };
 
+
         // --- Room Tariffs ---
-        $addItem('RoomTariffType', RoomTariffType::class, 'TARIF KAMAR RAWAT', 'KAMAR', 3, 
+        $addItem('RoomTariffType', RoomTariffType::class, 'Tarif Kamar Rawat', '1', 3, 
             [1600000, 1300000, 1000000, 800000, 700000, 500000, 250000]);
-        $addItem('RoomTariffType', RoomTariffType::class, 'JASA PERAWATAN UMUM', 'RAWAT', 3, 
+        $addItem('RoomTariffType', RoomTariffType::class, 'Jasa Perawatan Umum', '2', 3, 
             [215000, 180000, 180000, 110000, 100000, 85000, 20000]);
 
         // --- Medical Services ---
-        $addItem('MedicalService', MedicalService::class, 'JASA VISIT DOKTER SPESIALIS PENYAKIT DALAM', 'VISIT_SPESIALIS', 3, 
+        $addItem('MedicalService', MedicalService::class, 'Jasa Visit Dokter Spesialis Penyakit Dalam', '2001', 3, 
             [280000, 260000, 260000, 230000, 230000, 220000, 210000]);
-        $addItem('MedicalService', MedicalService::class, 'Jasa Visite Dokter Umum Ruangan', 'VISIT_UMUM', 1, 
+        $addItem('MedicalService', MedicalService::class, 'Jasa Visite Dokter Umum Ruangan', '2002', 1, 
             [180000, 160000, 160000, 130000, 130000, 120000, 120000]);
             
         // Lab & Rad
-        $addItem('MedicalService', MedicalService::class, 'Hematologi Lengkap', 'LAB_HEMA', 1, 
+        $addItem('MedicalService', MedicalService::class, 'Hematologi Lengkap', '2003', 1, 
             [400000, 358000, 348000, 338000, 338000, 328000, 318000]);
-        $addItem('MedicalService', MedicalService::class, 'USG ABDOMEN', 'RAD_USG', 1, 
+        $addItem('MedicalService', MedicalService::class, 'USG ABDOMEN', '2004', 1, 
             [1000000, 900000, 900000, 726000, 726000, 726000, 726000]);
 
         // --- Medications ---
-        $addItem('Medication', Medication::class, 'TERFACEF INJ', 'OBT01259', 6, 
+        $addItem('Medication', Medication::class, 'TERFACEF INJ', '3001', 6, 
             [440877, 426181, 426181, 411485, 411485, 411485, 411485]);
-        $addItem('Medication', Medication::class, 'SANMOL INF', 'OBT01168', 6, 
+        $addItem('Medication', Medication::class, 'SANMOL INF', '3002', 6, 
             [124565, 120413, 120413, 116261, 116261, 116261, 116261]);
             
     }

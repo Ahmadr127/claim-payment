@@ -120,7 +120,7 @@
                                 @if($med->hna)
                                     <div class="font-semibold text-gray-900">Rp {{ number_format($med->hna, 0, ',', '.') }}</div>
                                     @if($med->hna_ppn)
-                                        <div class="text-[10px] text-gray-400">PPN: Rp {{ number_format($med->hna_ppn, 0, ',', '.') }}</div>
+                                        <div class="text-[10px] text-gray-400">HNA+PPN: Rp {{ number_format($med->hna_ppn, 0, ',', '.') }}</div>
                                     @endif
                                 @else
                                     <span class="text-gray-400">-</span>

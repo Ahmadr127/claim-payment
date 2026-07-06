@@ -64,9 +64,15 @@ class MedicationController extends Controller
             'indication' => 'nullable|string',
             'active_ingredient' => 'nullable|string',
             'detailed_composition' => 'nullable|string',
+            'hna' => 'nullable|numeric|min:0',
+            'ppn_percentage' => 'nullable|numeric|min:0|max:100',
         ]);
 
         try {
+            $hna = $validated['hna'] ?? 0;
+            $ppn = $validated['ppn_percentage'] ?? 11;
+            $hnaPpn = (int) round($hna * (1 + ($ppn / 100)));
+
             Medication::create([
                 'medication_category_id' => $validated['medication_category_id'],
                 'item_code' => $validated['item_code'],
@@ -79,6 +85,9 @@ class MedicationController extends Controller
                 'indication' => $validated['indication'] ?? null,
                 'active_ingredient' => $validated['active_ingredient'] ?? null,
                 'detailed_composition' => $validated['detailed_composition'] ?? null,
+                'hna' => $hna,
+                'ppn_percentage' => $ppn,
+                'hna_ppn' => $hnaPpn,
             ]);
 
             return redirect()->route('medications.index')->with('success', 'Obat & Alkes berhasil ditambahkan.');
@@ -111,9 +120,15 @@ class MedicationController extends Controller
             'indication' => 'nullable|string',
             'active_ingredient' => 'nullable|string',
             'detailed_composition' => 'nullable|string',
+            'hna' => 'nullable|numeric|min:0',
+            'ppn_percentage' => 'nullable|numeric|min:0|max:100',
         ]);
 
         try {
+            $hna = $validated['hna'] ?? 0;
+            $ppn = $validated['ppn_percentage'] ?? 11;
+            $hnaPpn = (int) round($hna * (1 + ($ppn / 100)));
+
             $medication->update([
                 'medication_category_id' => $validated['medication_category_id'],
                 'item_code' => $validated['item_code'],
@@ -126,6 +141,9 @@ class MedicationController extends Controller
                 'indication' => $validated['indication'] ?? null,
                 'active_ingredient' => $validated['active_ingredient'] ?? null,
                 'detailed_composition' => $validated['detailed_composition'] ?? null,
+                'hna' => $hna,
+                'ppn_percentage' => $ppn,
+                'hna_ppn' => $hnaPpn,
             ]);
 
             return redirect()->route('medications.index')->with('success', 'Obat & Alkes berhasil diperbarui.');

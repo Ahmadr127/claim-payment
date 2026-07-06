@@ -14,13 +14,13 @@ class RoomClassSeeder extends Seeder
     public function run(): void
     {
         $roomClasses = [
-            ['code' => 'SUITES',    'name' => 'Suites',    'display_order' => 1],
-            ['code' => 'VVIP',      'name' => 'VVIP',      'display_order' => 2],
-            ['code' => 'VIP',       'name' => 'VIP',       'display_order' => 3],
-            ['code' => 'UTAMA',     'name' => 'Utama',     'display_order' => 4],
-            ['code' => 'KELAS_I',   'name' => 'Kelas I',   'display_order' => 5],
-            ['code' => 'KELAS_II',  'name' => 'Kelas II',  'display_order' => 6],
-            ['code' => 'KELAS_III', 'name' => 'Kelas III', 'display_order' => 7],
+            ['code' => '1',    'name' => 'Suites',    'display_order' => 1],
+            ['code' => '2',    'name' => 'VVIP',      'display_order' => 2],
+            ['code' => '3',    'name' => 'VIP',       'display_order' => 3],
+            ['code' => '4',    'name' => 'Utama',     'display_order' => 4],
+            ['code' => '5',    'name' => 'Kelas I',   'display_order' => 5],
+            ['code' => '6',    'name' => 'Kelas II',  'display_order' => 6],
+            ['code' => '7',    'name' => 'Kelas III', 'display_order' => 7],
         ];
 
         foreach ($roomClasses as $class) {
@@ -36,8 +36,8 @@ class RoomClassSeeder extends Seeder
 
         // Tipe tarif kamar
         $tariffTypes = [
-            ['code' => 'kamar_rawat',    'name' => 'Tarif Kamar Rawat'],
-            ['code' => 'perawatan_umum', 'name' => 'Jasa Perawatan Umum'],
+            ['code' => '1',    'name' => 'Tarif Kamar Rawat'],
+            ['code' => '2',    'name' => 'Jasa Perawatan Umum'],
         ];
 
         foreach ($tariffTypes as $type) {
@@ -55,17 +55,17 @@ class RoomClassSeeder extends Seeder
         // QTY=3, jadi unit price = total / 3
         $kamarTariffs = [
             // [kode_kelas, tarif_kamar_per_hari, tarif_perawatan_per_hari]
-            ['SUITES',    1600000, 215000],
-            ['VVIP',      1300000, 180000],  // total VVIP: 3.900.000 / 3
-            ['VIP',       1000000, 180000],
-            ['UTAMA',      800000, 110000],
-            ['KELAS_I',    700000, 100000],
-            ['KELAS_II',   500000,  85000],
-            ['KELAS_III',  250000,  20000],
+            ['1',    1600000, 215000],
+            ['2',    1300000, 180000],
+            ['3',    1000000, 180000],
+            ['4',     800000, 110000],
+            ['5',     700000, 100000],
+            ['6',     500000,  85000],
+            ['7',     250000,  20000],
         ];
 
-        $kamarTypeId    = DB::table('room_tariff_types')->where('code', 'kamar_rawat')->value('id');
-        $perawatanTypeId = DB::table('room_tariff_types')->where('code', 'perawatan_umum')->value('id');
+        $kamarTypeId    = DB::table('room_tariff_types')->where('code', '1')->value('id');
+        $perawatanTypeId = DB::table('room_tariff_types')->where('code', '2')->value('id');
 
         foreach ($kamarTariffs as [$classCode, $kamarAmount, $perawatanAmount]) {
             $classId = DB::table('room_classes')->where('code', $classCode)->value('id');

@@ -25,6 +25,9 @@ class DatabaseSeeder extends Seeder
             MedicationSeeder::class,
             DiagnosisPathwaySeeder::class,
 
+            // Unit Cost assignments
+            UnitCostSeeder::class,
+
             // Users (terakhir agar role sudah ada)
             UserSeeder::class,
         ]);

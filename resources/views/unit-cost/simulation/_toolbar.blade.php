@@ -1,5 +1,6 @@
 {{-- _toolbar.blade.php --}}
 <div class="flex flex-col lg:flex-row gap-4 mb-6">
+    {{-- Search Bar --}}
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 lg:w-80 flex items-center px-4">
         <i class="fas fa-search text-gray-400"></i>
         <input
@@ -10,6 +11,7 @@
         >
     </div>
 
+    {{-- Room Class Tabs --}}
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-2 flex overflow-x-auto flex-1">
         @foreach($roomClasses as $rc)
         <button
@@ -22,4 +24,13 @@
         </button>
         @endforeach
     </div>
+
+    {{-- Add Service Button --}}
+    <button
+        type="button"
+        @click="$dispatch('open-add-service-modal')"
+        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg shadow-sm text-sm font-medium transition-colors flex items-center justify-center gap-2 whitespace-nowrap self-center lg:self-auto"
+    >
+        <i class="fas fa-plus text-xs"></i> Tambah Layanan
+    </button>
 </div>

@@ -108,6 +108,7 @@ class DiagnosisPathwayController extends Controller
                     'name' => $item->name,
                     'type' => 'MedicalService',
                     'type_label' => 'Jasa Medis',
+                    'percentage' => $item->percentage ?? 70,
                 ];
             });
 
@@ -123,6 +124,8 @@ class DiagnosisPathwayController extends Controller
                     'name' => $item->name,
                     'type' => 'Medication',
                     'type_label' => 'Obat & Alkes',
+                    'hna' => $item->hna,
+                    'ppn_percentage' => $item->ppn_percentage,
                 ];
             });
 

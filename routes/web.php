@@ -107,4 +107,17 @@ Route::middleware('auth')->group(function () {
             ->name('organization-units.update-head');
     });
 
+    // Unit Cost Simulation routes
+    Route::middleware(['permission:view_unit_cost'])->group(function () {
+        Route::get('/unit-cost', [\App\Http\Controllers\UnitCostSimulationController::class, 'index'])->name('unit-cost.index');
+        Route::get('/unit-cost/{organizationUnit}/{diagnosis}', [\App\Http\Controllers\UnitCostSimulationController::class, 'show'])
+            ->name('unit-cost.simulation.show');
+        Route::post('/unit-cost/{organizationUnit}/{diagnosis}/save-draft', [\App\Http\Controllers\UnitCostSimulationController::class, 'saveDraft'])
+            ->name('unit-cost.simulation.save-draft');
+        Route::get('/unit-cost/{organizationUnit}/{diagnosis}/export-pdf', [\App\Http\Controllers\UnitCostSimulationController::class, 'exportPDF'])
+            ->name('unit-cost.simulation.export-pdf');
+        Route::get('/unit-cost/{organizationUnit}/{diagnosis}/export-excel', [\App\Http\Controllers\UnitCostSimulationController::class, 'exportExcel'])
+            ->name('unit-cost.simulation.export-excel');
+    });
+
 });

@@ -21,6 +21,7 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'manage_services', 'display_name' => 'Kelola Layanan Medis', 'description' => 'Mengelola layanan medis dan tarifnya'],
             ['name' => 'manage_clinical_pathway', 'display_name' => 'Kelola Tarif Umum', 'description' => 'Mengelola tarif umum per diagnosa'],
             ['name' => 'manage_medications', 'display_name' => 'Kelola Obat & Alkes', 'description' => 'Mengelola master data obat, alkes, dan tarifnya'],
+            ['name' => 'view_unit_cost', 'display_name' => 'Lihat Unit Cost', 'description' => 'Melihat simulasi biaya tindakan per unit organisasi'],
         ];
 
         foreach ($permissions as $permission) {
@@ -58,7 +59,8 @@ class RolePermissionSeeder extends Seeder
                 'manage_service_groups',
                 'manage_services',
                 'manage_clinical_pathway',
-                'manage_medications'
+                'manage_medications',
+                'view_unit_cost'
             ])->pluck('id')->toArray()
         );
     }

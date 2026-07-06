@@ -89,6 +89,13 @@ return [
         ],
     ],
     [
+        'title' => 'Unit Cost',
+        'icon' => 'fas fa-calculator',
+        'permission' => 'view_unit_cost',
+        'active' => 'unit-cost.*',
+        'route' => 'unit-cost.index',
+    ],
+    [
         'title' => 'Master Data',
         'icon' => 'fas fa-database',
         'permission' => ['manage_service_groups', 'manage_services', 'manage_medications'],
