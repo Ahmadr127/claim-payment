@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Claim Payment')</title>
+    <title>@yield('title', 'Clinical Pathway')</title>
     <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';</script>
@@ -41,7 +41,7 @@
                     <div class="bg-white rounded-xl border border-green-200 shadow-sm p-2 flex-shrink-0">
                         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto object-contain">
                     </div>
-                    <h1 class="sidebar-text text-xl font-bold text-white tracking-wide truncate">Claim Payment</h1>
+                    <h1 class="sidebar-text text-xl font-bold text-white tracking-wide truncate">Clinical Pathway</h1>
                 </div>
             </div>
 
