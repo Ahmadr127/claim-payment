@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,8 +12,10 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            // Auth & Org
+            // Auth & Akses
             RolePermissionSeeder::class,
+
+            // Organisasi
             OrganizationTypeSeeder::class,
             OrganizationUnitSeeder::class,
 
@@ -24,31 +24,9 @@ class DatabaseSeeder extends Seeder
             ServiceGroupSeeder::class,
             MedicationSeeder::class,
             DiagnosisPathwaySeeder::class,
-        ]);
 
-        // Clear existing users to only leave what we seed
-        \App\Models\User::truncate();
-
-        // Create admin user
-        $adminRole = \App\Models\Role::where('name', 'admin')->first();
-        
-        User::factory()->create([
-            'name' => 'Administrator',
-            'username' => 'admin',
-            'email' => 'admin@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('rsazra'),
-            'role_id' => $adminRole->id,
-        ]);
-
-        // Create master data user
-        $masterDataRole = \App\Models\Role::where('name', 'master_data')->first();
-        
-        User::factory()->create([
-            'name' => 'Staff Master Data',
-            'username' => 'staff',
-            'email' => 'staff@example.com',
-            'password' => \Illuminate\Support\Facades\Hash::make('rsazra'),
-            'role_id' => $masterDataRole->id,
+            // Users (terakhir agar role sudah ada)
+            UserSeeder::class,
         ]);
     }
 }
