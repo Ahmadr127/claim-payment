@@ -57,9 +57,10 @@ class UnitCostCalculationService
                         ->where('is_active', true)
                         ->latest('effective_date')
                         ->first();
-                    $amount = $tariff?->amount ?? 0;
-                    $baseAmount = $amount;
-                    $hna = $amount;
+                    $baseAmount = $tariff?->amount ?? 0;
+                    $percentage = 100; // Default 100%
+                    $amount = (int) round($baseAmount * ($percentage / 100));
+                    $hna = $baseAmount;
                 } elseif ($type === 'MedicalService') {
                     // Jasa Medis: service_tariff_amount × percentage
                     $tariff = DB::table('service_tariffs')

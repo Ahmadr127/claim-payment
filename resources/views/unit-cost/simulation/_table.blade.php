@@ -59,7 +59,18 @@
                     </td>
                     <td class="px-3 py-2 text-center text-gray-300 text-xs">-</td>
                     <td class="px-3 py-2 text-center text-gray-300 text-xs">-</td>
-                    <td class="px-3 py-2 text-center text-gray-300 text-xs">-</td>
+                    <td class="px-3 py-2 text-center">
+                        @foreach($roomClasses as $rc)
+                        <div x-show="activeTab === {{ $rc->id }}" x-cloak>
+                            <input type="number"
+                                   x-model.number="row.tariffs[{{ $rc->id }}].percentage"
+                                   @input="updatePercentage(index, {{ $rc->id }})"
+                                   step="0.01"
+                                   placeholder="100"
+                                   class="w-full text-center border border-gray-300 rounded px-1 py-1 focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 text-xs">
+                        </div>
+                        @endforeach
+                    </td>
                     <td class="px-3 py-2 text-right font-bold text-gray-900">
                         @foreach($roomClasses as $rc)
                         <div x-show="activeTab === {{ $rc->id }}" x-cloak>

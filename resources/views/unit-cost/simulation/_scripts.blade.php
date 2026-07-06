@@ -47,7 +47,13 @@ document.addEventListener('alpine:init', () => {
                     if (row.type === 'Medication' && !row.tariffs[rcId].hna_ppn) {
                         row.tariffs[rcId].hna_ppn = Math.round(row.tariffs[rcId].hna * (1 + (row.tariffs[rcId].ppn / 100)));
                     }
-                    row.tariffs[rcId].percentage = parseFloat(row.tariffs[rcId].percentage) || 0;
+                    let defaultPct = row.type === 'MedicalService' ? 70 : (row.type === 'RoomTariffType' ? 100 : 0);
+                    let rawPct = row.tariffs[rcId].percentage;
+                    if (rawPct === null || rawPct === undefined || rawPct === '') {
+                        row.tariffs[rcId].percentage = defaultPct;
+                    } else {
+                        row.tariffs[rcId].percentage = parseFloat(rawPct);
+                    }
                     row.tariffs[rcId].base_amount = parseFloat(row.tariffs[rcId].base_amount) || 0;
                     row.tariffs[rcId].total = parseFloat(row.tariffs[rcId].total) || 0;
                 });
@@ -88,9 +94,14 @@ document.addEventListener('alpine:init', () => {
 
         updatePercentage(index, rcId) {
             const row = this.matrix[index];
-            if (row.type === 'MedicalService' && !row.deleted) {
+            if ((row.type === 'MedicalService' || row.type === 'RoomTariffType') && !row.deleted) {
                 const baseAmount = row.tariffs[rcId].base_amount || 0;
-                const percentage = row.tariffs[rcId].percentage || 70;
+                let percentage = row.tariffs[rcId].percentage;
+                if (percentage === undefined || percentage === null || percentage === '') {
+                    percentage = row.type === 'MedicalService' ? 70 : 100;
+                } else {
+                    percentage = parseFloat(percentage);
+                }
                 const newAmount = Math.round(baseAmount * (percentage / 100));
                 row.tariffs[rcId].amount = newAmount;
                 row.tariffs[rcId].amount_formatted = this.formatCurrency(newAmount);
@@ -120,7 +131,7 @@ document.addEventListener('alpine:init', () => {
             const row = this.matrix[index];
             if (row.type === 'Medication') {
                 this.updateHnaPpn(index, rcId);
-            } else if (row.type === 'MedicalService') {
+            } else if (row.type === 'MedicalService' || row.type === 'RoomTariffType') {
                 row.tariffs[rcId].base_amount = row.tariffs[rcId].hna;
                 this.updatePercentage(index, rcId);
             } else {
@@ -145,7 +156,7 @@ document.addEventListener('alpine:init', () => {
             const row = this.matrix[index];
             if (row.type === 'Medication') {
                 this.updateHnaPpn(index, rcId);
-            } else if (row.type === 'MedicalService') {
+            } else if (row.type === 'MedicalService' || row.type === 'RoomTariffType') {
                 row.tariffs[rcId].base_amount = row.tariffs[rcId].hna;
                 this.updatePercentage(index, rcId);
             } else {
@@ -233,11 +244,12 @@ document.addEventListener('alpine:init', () => {
                     hnaVal = baseAmountVal; 
                     amountVal = Math.round(baseAmountVal * (percentageVal / 100));
                 } else if (service.type === 'RoomTariffType') {
+                    percentageVal = parseFloat(service.percentage) || 100;
                     baseAmountVal = (service.tariffs && service.tariffs[{{ $rc->id }}])
                         ? parseFloat(service.tariffs[{{ $rc->id }}])
                         : 0;
                     hnaVal = baseAmountVal;
-                    amountVal = baseAmountVal;
+                    amountVal = Math.round(baseAmountVal * (percentageVal / 100));
                 }
 
                 tariffs[{{ $rc->id }}] = {
