@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient\Diagnosis;
-use App\Models\Patient\DiagnosisPathway;
+use App\Models\ClinicalPathway\Diagnosis;
+use App\Models\ClinicalPathway\DiagnosisPathway;
 use App\Models\Room\RoomClass;
 use App\Models\Room\RoomTariffType;
 use App\Models\Service\MedicalService;
@@ -12,6 +12,16 @@ use Illuminate\Http\Request;
 
 class DiagnosisPathwayController extends Controller
 {
+    public function create()
+    {
+        $diagnosis = new Diagnosis();
+        $pathway = new DiagnosisPathway(['length_of_stay' => 1]);
+        $roomClasses = RoomClass::where('is_active', true)->orderBy('display_order')->get();
+        $matrix = [];
+
+        return view('diagnoses.pathway', compact('diagnosis', 'pathway', 'roomClasses', 'matrix'));
+    }
+
     public function show(Diagnosis $diagnosis)
     {
         $pathway = DiagnosisPathway::with(['items.item'])->where('diagnosis_id', $diagnosis->id)->first();
@@ -134,6 +144,36 @@ class DiagnosisPathwayController extends Controller
         return response()->json($results);
     }
 
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icd_code' => 'required|string|max:50|unique:diagnoses,icd_code',
+            'admin_fee_percentage' => 'nullable|numeric',
+            'matrix' => 'array',
+        ]);
+
+        $diagnosis = Diagnosis::create([
+            'name' => $request->name,
+            'icd_code' => $request->icd_code,
+            'admin_fee_percentage' => $request->admin_fee_percentage,
+        ]);
+
+        $pathway = DiagnosisPathway::create([
+            'diagnosis_id' => $diagnosis->id,
+            'length_of_stay' => 1,
+            'is_active' => true,
+        ]);
+
+        $matrix = $request->input('matrix', []);
+        $this->saveMatrixData($pathway, $matrix);
+
+        return response()->json([
+            'message' => 'Diagnosa dan simulasi tarif berhasil dibuat.',
+            'redirect' => route('diagnoses.pathway', $diagnosis->id)
+        ]);
+    }
+
     public function update(Request $request, Diagnosis $diagnosis)
     {
         $pathway = DiagnosisPathway::where('diagnosis_id', $diagnosis->id)->firstOrFail();
@@ -147,6 +187,13 @@ class DiagnosisPathwayController extends Controller
             ]);
         }
         
+        $this->saveMatrixData($pathway, $matrix);
+        
+        return response()->json(['message' => 'Perubahan simulasi berhasil disimpan ke database.']);
+    }
+
+    private function saveMatrixData($pathway, $matrix)
+    {
         // Delete existing items
         $pathway->items()->delete();
         
@@ -179,9 +226,7 @@ class DiagnosisPathwayController extends Controller
         }
         
         if (!empty($newItems)) {
-            \App\Models\Patient\DiagnosisPathwayItem::insert($newItems);
+            \App\Models\ClinicalPathway\DiagnosisPathwayItem::insert($newItems);
         }
-        
-        return response()->json(['message' => 'Perubahan simulasi berhasil disimpan ke database.']);
     }
 }

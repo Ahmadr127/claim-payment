@@ -13,7 +13,7 @@ class MedicationSeeder extends Seeder
 {
     public function run(): void
     {
-        // Kategori obat/alkes
+        // 1. Kategori obat/alkes
         $categories = [
             ['code' => 'OBAT',     'name' => 'Obat-obatan'],
             ['code' => 'ALKES',    'name' => 'Alat Kesehatan'],
@@ -30,40 +30,95 @@ class MedicationSeeder extends Seeder
 
         $catId = fn(string $code) => DB::table('medication_categories')->where('code', $code)->value('id');
 
-        // Obat dan alkes dari tabel RS Azra
+        // 2. Golongan Obat
+        $groups = [
+            ['code' => '8', 'name' => 'OBAT UNTUK TERAPI PALIATIF'],
+            ['code' => '28', 'name' => 'VITAMIN DAN MINERAL'],
+            ['code' => '30', 'name' => 'LAIN - LAIN'],
+        ];
+        foreach ($groups as $g) {
+            DB::table('medication_groups')->updateOrInsert(
+                ['code' => $g['code']],
+                array_merge($g, ['is_active' => true, 'created_at' => now(), 'updated_at' => now()])
+            );
+        }
+        $getGroupId = fn($code) => DB::table('medication_groups')->where('code', $code)->value('id');
+
+        // 3. Komoditi
+        $commodities = [
+            'Apotik/Obat Injeksi',
+            'Cairan Infus',
+            'Apotik/Obat Resep (Selain Injeksi)/Ling K',
+            'Alkes',
+        ];
+        foreach ($commodities as $c) {
+            DB::table('medication_commodities')->updateOrInsert(
+                ['name' => $c],
+                ['is_active' => true, 'created_at' => now(), 'updated_at' => now()]
+            );
+        }
+        $getCommId = fn($name) => DB::table('medication_commodities')->where('name', $name)->value('id');
+
+        // 4. Kelompok Barang
+        $prodGroups = [
+            'PARENTERAL DAN VAKSIN',
+            'INFUS',
+            'ORAL',
+            'KONSUMABLE',
+            'ALKES'
+        ];
+        foreach ($prodGroups as $pg) {
+            DB::table('medication_product_groups')->updateOrInsert(
+                ['name' => $pg],
+                ['is_active' => true, 'created_at' => now(), 'updated_at' => now()]
+            );
+        }
+        $getProdGroupId = fn($name) => DB::table('medication_product_groups')->where('name', $name)->value('id');
+
+        // 5. Obat dan alkes dari tabel RS Azra
         $medications = [
-            // [item_code, nama, kategori, unit]
-            ['OBTO1259', 'TERFACEF INJ',                    'OBAT',       'vial'],
-            ['OBTO1085', 'PUMPITOR INJ 40 MG',              'OBAT',       'vial'],
-            ['OBTO1320', 'TROVENSIS INJ 4 MG',              'OBAT',       'ampul'],
-            ['OBTO1099', 'RANTIN INJ',                      'OBAT',       'ampul'],
-            ['OBTO0651', 'INTERLAC CHEW TAB',               'OBAT',       'sachet'],
-            ['ALK00368',  'HI-FRESH WASH CLOTH',             'KONSUMABLE', 'pcs'],
-            ['OBTO2246', 'INFUSAN NaCL 100ML SANBE',        'INFUS',      'botol'],
-            ['ALK00701',  'SPLIT 10CC',                      'ALKES',      'pcs'],
-            ['ALK00706',  'SPLIT 3CC',                       'ALKES',      'pcs'],
-            ['ALK01307',  'ALCOHOLSWAB BIRU COSMOMED-JS',    'KONSUMABLE', 'pcs'],
-            ['ALK00224',  'ELASTOMULL 10CM X 4 MX - JS',    'ALKES',      'pcs'],
-            ['OBTO2553', 'INFUSAN RL (RL)',                 'INFUS',      'botol'],
-            ['ALK00380',  'INFUS SET',                       'ALKES',      'pcs'],
-            ['ALK00759',  'SURSHIELD SURFLO II SAFETY NO 22 25', 'ALKES', 'pcs'],
+            // [code, name, category, unit, group_code, commodity_name, product_group_name, hna, hna_ppn, ppn_rajal, ppn_ranap, active_ingredient, composition, indication]
+            ['OBTO1259', 'TERFACEF INJ',                    'OBAT',       'vial',   '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', 380000.00, 421800.00, 11.00, 11.00, 'Ceftriaxone', 'Ceftriaxone 1g', 'Infeksi bakteri gram negatif berat'],
+            ['OBTO1085', 'PUMPITOR INJ 40 MG',              'OBAT',       'vial',   '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
+            ['OBTO1320', 'TROVENSIS INJ 4 MG',              'OBAT',       'ampul',  '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
+            ['OBTO1099', 'RANTIN INJ',                      'OBAT',       'ampul',  '8',  'Apotik/Obat Injeksi',                      'PARENTERAL DAN VAKSIN', null, null, 0, 0, null, null, null],
+            ['OBTO0651', 'INTERLAC CHEW TAB',               'OBAT',       'sachet', '28', 'Apotik/Obat Resep (Selain Injeksi)/Ling K', 'ORAL',                  null, null, 0, 0, null, null, null],
+            ['ALK00368', 'HI-FRESH WASH CLOTH',             'KONSUMABLE', 'pcs',    '30', 'Alkes',                                    'KONSUMABLE',            null, null, 0, 0, null, null, null],
+            ['OBTO2246', 'INFUSAN NaCL 100ML SANBE',        'INFUS',      'botol',  '30', 'Cairan Infus',                             'INFUS',                 25000.00, 27750.00, 11.00, 11.00, 'Sodium Chloride', 'NaCl 0.9%', 'Mengganti cairan tubuh yang hilang'],
+            ['ALK00701', 'SPLIT 10CC',                      'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
+            ['ALK00706', 'SPLIT 3CC',                       'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
+            ['ALK01307', 'ALCOHOLSWAB BIRU COSMOMED-JS',    'KONSUMABLE', 'pcs',    '30', 'Alkes',                                    'KONSUMABLE',            null, null, 0, 0, null, null, null],
+            ['ALK00224', 'ELASTOMULL 10CM X 4 MX - JS',     'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
+            ['OBTO2553', 'INFUSAN RL (RL)',                 'INFUS',      'botol',  '30', 'Cairan Infus',                             'INFUS',                 null, null, 0, 0, null, null, null],
+            ['ALK00380', 'INFUS SET',                       'ALKES',      'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
+            ['ALK00759', 'SURSHIELD SURFLO II SAFETY NO 22 25', 'ALKES',  'pcs',    '30', 'Alkes',                                    'ALKES',                 null, null, 0, 0, null, null, null],
         ];
 
-        foreach ($medications as [$code, $name, $catCode, $unit]) {
+        foreach ($medications as $med) {
             DB::table('medications')->updateOrInsert(
-                ['item_code' => $code],
+                ['item_code' => $med[0]],
                 [
-                    'medication_category_id' => $catId($catCode),
-                    'name'       => $name,
-                    'unit'       => $unit,
-                    'is_active'  => true,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'medication_category_id'      => $catId($med[2]),
+                    'name'                        => $med[1],
+                    'unit'                        => $med[3],
+                    'medication_group_id'         => $getGroupId($med[4]),
+                    'medication_commodity_id'     => $getCommId($med[5]),
+                    'medication_product_group_id' => $getProdGroupId($med[6]),
+                    'hna'                         => $med[7],
+                    'hna_ppn'                     => $med[8],
+                    'ppn_rajal'                   => $med[9],
+                    'ppn_ranap'                   => $med[10],
+                    'active_ingredient'           => $med[11],
+                    'detailed_composition'        => $med[12],
+                    'indication'                  => $med[13],
+                    'is_active'                   => true,
+                    'created_at'                  => now(),
+                    'updated_at'                  => now(),
                 ]
             );
         }
 
-        // Tarif per kelas kamar (dari tabel RS Azra, unit price per item)
+        // 6. Tarif per kelas kamar (dari tabel RS Azra, unit price per item)
         // Format: [item_code, SUITES, VVIP, VIP, UTAMA, KELAS_I, KELAS_II, KELAS_III]
         $tariffs = [
             ['OBTO1259', 440877, 426181, 426181, 411485, 411485, 411485, 411485],

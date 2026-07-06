@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
 
             // Master data — urutan penting: room_classes dulu sebelum service/medication
             RoomClassSeeder::class,
-            ClaimStatusSeeder::class,
-            ServiceCategorySeeder::class,
+            ServiceGroupSeeder::class,
             MedicationSeeder::class,
             DiagnosisPathwaySeeder::class,
         ]);

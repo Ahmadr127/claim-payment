@@ -13,6 +13,11 @@ class RoomTariff extends Model
 
     protected $guarded = ['id'];
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\Models\Room\RoomTariffFactory::new();
+    }
+
     public function roomClass(): BelongsTo
     {
         return $this->belongsTo(RoomClass::class);

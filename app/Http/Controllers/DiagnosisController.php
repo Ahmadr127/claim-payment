@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Patient\Diagnosis;
+use App\Models\ClinicalPathway\Diagnosis;
 use Illuminate\Http\Request;
 
 class DiagnosisController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Diagnosis::query();
+        $query = Diagnosis::with(['creator', 'editor']);
 
         if ($request->has('search') && $request->search != '') {
             $search = $request->search;

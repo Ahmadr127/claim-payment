@@ -13,6 +13,11 @@ class RoomClass extends Model
 
     protected $guarded = ['id'];
 
+    protected static function newFactory()
+    {
+        return \Database\Factories\Models\Room\RoomClassFactory::new();
+    }
+
     public function tariffs(): HasMany
     {
         return $this->hasMany(RoomTariff::class);

@@ -17,9 +17,10 @@ class RolePermissionSeeder extends Seeder
             ['name' => 'manage_users', 'display_name' => 'Kelola Users', 'description' => 'Mengelola pengguna'],
             ['name' => 'manage_organization_types', 'display_name' => 'Kelola Tipe Organisasi', 'description' => 'Mengelola tipe organisasi'],
             ['name' => 'manage_organization_units', 'display_name' => 'Kelola Unit Organisasi', 'description' => 'Mengelola unit organisasi'],
-            ['name' => 'manage_service_categories', 'display_name' => 'Kelola Kategori Layanan', 'description' => 'Mengelola kategori layanan medis'],
+            ['name' => 'manage_service_groups', 'display_name' => 'Kelola Golongan Layanan', 'description' => 'Mengelola golongan layanan medis'],
             ['name' => 'manage_services', 'display_name' => 'Kelola Layanan Medis', 'description' => 'Mengelola layanan medis dan tarifnya'],
             ['name' => 'manage_clinical_pathway', 'display_name' => 'Kelola Tarif Umum', 'description' => 'Mengelola tarif umum per diagnosa'],
+            ['name' => 'manage_medications', 'display_name' => 'Kelola Obat & Alkes', 'description' => 'Mengelola master data obat, alkes, dan tarifnya'],
         ];
 
         foreach ($permissions as $permission) {
@@ -54,9 +55,10 @@ class RolePermissionSeeder extends Seeder
         $masterDataRole->permissions()->sync(
             Permission::whereIn('name', [
                 'view_dashboard',
-                'manage_service_categories',
+                'manage_service_groups',
                 'manage_services',
-                'manage_clinical_pathway'
+                'manage_clinical_pathway',
+                'manage_medications'
             ])->pluck('id')->toArray()
         );
     }

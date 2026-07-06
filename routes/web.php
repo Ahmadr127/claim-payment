@@ -41,16 +41,31 @@ Route::middleware('auth')->group(function () {
         Route::get('/diagnoses', [\App\Http\Controllers\DiagnosisController::class, 'index'])->name('diagnoses.index');
         // Static route must come before wildcard {diagnosis} route
         Route::get('/diagnoses/services/search', [\App\Http\Controllers\DiagnosisPathwayController::class, 'searchServices'])->name('diagnoses.services.search');
+        Route::get('/diagnoses/create', [\App\Http\Controllers\DiagnosisPathwayController::class, 'create'])->name('diagnoses.pathway.create');
+        Route::post('/diagnoses/store', [\App\Http\Controllers\DiagnosisPathwayController::class, 'store'])->name('diagnoses.pathway.store');
         Route::get('/diagnoses/{diagnosis}/pathway', [\App\Http\Controllers\DiagnosisPathwayController::class, 'show'])->name('diagnoses.pathway');
         Route::post('/diagnoses/{diagnosis}/pathway', [\App\Http\Controllers\DiagnosisPathwayController::class, 'update'])->name('diagnoses.pathway.update');
     });
 
-    Route::middleware(['permission:manage_service_categories'])->group(function () {
-        Route::resource('service-categories', \App\Http\Controllers\ServiceCategoryController::class)->except(['create', 'show', 'edit']);
+    Route::middleware(['permission:manage_service_groups'])->group(function () {
+        Route::resource('service-groups', \App\Http\Controllers\ServiceGroupController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::middleware(['permission:manage_services'])->group(function () {
         Route::resource('services', \App\Http\Controllers\MedicalServiceController::class);
+        Route::resource('service-prices', \App\Http\Controllers\ServicePriceController::class)
+            ->parameters(['service-prices' => 'service'])
+            ->only(['index', 'edit', 'update']);
+    });
+
+    Route::middleware(['permission:manage_medications'])->group(function () {
+        Route::resource('medications', \App\Http\Controllers\MedicationController::class);
+        Route::resource('medication-prices', \App\Http\Controllers\MedicationPriceController::class)
+            ->parameters(['medication-prices' => 'medication'])
+            ->only(['index', 'edit', 'update']);
+        Route::resource('medication-groups', \App\Http\Controllers\MedicationGroupController::class)->except(['create', 'show', 'edit']);
+        Route::resource('medication-commodities', \App\Http\Controllers\MedicationCommodityController::class)->except(['create', 'show', 'edit']);
+        Route::resource('medication-product-groups', \App\Http\Controllers\MedicationProductGroupController::class)->except(['create', 'show', 'edit']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

@@ -1,8 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Billing\ChargeController;
-use App\Http\Controllers\Billing\BillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,15 +12,5 @@ use App\Http\Controllers\Billing\BillController;
 |
 */
 
-// Middleware can be added here later (e.g. auth:sanctum)
-Route::prefix('hospitalizations')->group(function () {
-    
-    // Charge Recording
-    Route::post('{id}/charges/room', [ChargeController::class, 'recordRoom']);
-    Route::post('{id}/charges/service', [ChargeController::class, 'recordService']);
-    Route::post('{id}/charges/medication', [ChargeController::class, 'recordMedication']);
-    
-    // Bill Preview
-    Route::get('{id}/bill-summary', [BillController::class, 'preview']);
+// Add your AJAX routes here
 
-});

@@ -14,8 +14,26 @@
                 </li>
             </ol>
         </nav>
-        <h2 class="text-2xl font-bold text-gray-900">Tarif Umum: {{ $diagnosis->name }}</h2>
-        <p class="text-sm text-gray-500 mt-1">Kode ICD-10: {{ $diagnosis->icd_code }} &nbsp;|&nbsp; Lama rawat: <span x-text="getKamarQty()"></span> hari</p>
+        @if($diagnosis->exists)
+            <h2 class="text-2xl font-bold text-gray-900">Tarif Umum: {{ $diagnosis->name }}</h2>
+            <p class="text-sm text-gray-500 mt-1">Kode ICD-10: {{ $diagnosis->icd_code }} &nbsp;|&nbsp; Lama rawat: <span x-text="getKamarQty()"></span> hari</p>
+        @else
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Nama Diagnosa <span class="text-red-500">*</span></label>
+                    <input type="text" x-model="diagnosisName" class="mt-1 block w-full md:w-96 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm px-3 py-2 border" placeholder="Contoh: Demam Berdarah Dengue (DBD)">
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Kode ICD-10 <span class="text-red-500">*</span></label>
+                        <input type="text" x-model="diagnosisIcdCode" class="mt-1 block w-48 rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm px-3 py-2 border" placeholder="Contoh: A91">
+                    </div>
+                    <div class="pt-6">
+                        <span class="text-sm text-gray-500">&nbsp;|&nbsp; Lama rawat: <span x-text="getKamarQty()"></span> hari</span>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 
     {{-- Tombol Tambah Layanan --}}

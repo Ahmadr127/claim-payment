@@ -7,6 +7,8 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('simulationForm', () => ({
         activeTab: {{ $roomClasses->first()->id ?? 0 }},
         searchQuery: '',
+        diagnosisName: '{{ $diagnosis->name ?? "" }}',
+        diagnosisIcdCode: '{{ $diagnosis->icd_code ?? "" }}',
         adminFeePercentage: {{ $diagnosis->admin_fee_percentage ?? 6.00 }},
 
         matrix: {!! json_encode(collect($matrix)->map(function($row) use ($roomClasses) {
@@ -152,7 +154,7 @@ document.addEventListener('alpine:init', () => {
         },
 
         saveChanges() {
-            const url = '{{ route("diagnoses.pathway.update", $diagnosis->id ?? 0) }}';
+            const url = '{{ $diagnosis->exists ? route("diagnoses.pathway.update", $diagnosis->id) : route("diagnoses.pathway.store") }}';
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -162,25 +164,39 @@ document.addEventListener('alpine:init', () => {
                 },
                 body: JSON.stringify({ 
                     matrix: this.matrix,
-                    admin_fee_percentage: this.adminFeePercentage
+                    admin_fee_percentage: this.adminFeePercentage,
+                    name: this.diagnosisName,
+                    icd_code: this.diagnosisIcdCode
                 })
             })
-            .then(res => {
-                if (!res.ok) throw new Error('Network error');
+            .then(async res => {
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => null);
+                    if (errData && errData.message) {
+                        throw new Error(errData.message);
+                    }
+                    throw new Error('Gagal menyimpan perubahan.');
+                }
                 return res.json();
             })
             .then(data => {
                 window.Toast && Toast.success(data.message || 'Perubahan simulasi berhasil disimpan.');
-                // Mark all new as no longer new
-                this.matrix.forEach(row => { row.is_new = false; });
-                
-                // Reload halaman agar state sinkron dengan database
-                setTimeout(() => {
-                    window.location.reload();
-                }, 800);
+                if (data.redirect) {
+                    setTimeout(() => {
+                        window.location.href = data.redirect;
+                    }, 800);
+                } else {
+                    // Mark all new as no longer new
+                    this.matrix.forEach(row => { row.is_new = false; });
+                    
+                    // Reload halaman agar state sinkron dengan database
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 800);
+                }
             })
             .catch(err => {
-                window.Toast && Toast.error('Gagal menyimpan perubahan.');
+                window.Toast && Toast.error(err.message || 'Gagal menyimpan perubahan.');
             });
         },
     }));

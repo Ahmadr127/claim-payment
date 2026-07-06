@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Patient\Diagnosis;
-use App\Models\Patient\DiagnosisPathway;
+use App\Models\ClinicalPathway\Diagnosis;
+use App\Models\ClinicalPathway\DiagnosisPathway;
 use App\Models\Room\RoomTariffType;
 use App\Models\Service\MedicalService;
 use App\Models\Medication\Medication;
@@ -46,9 +46,9 @@ class DiagnosisPathwaySeeder extends Seeder
                 $tableName = 'room_tariffs';
                 $foreignId = 'room_tariff_type_id';
             } elseif ($modelClass === MedicalService::class) {
-                $cat = DB::table('service_categories')->where('code', 'CAT_'.$code)->first();
-                $catId = $cat ? $cat->id : DB::table('service_categories')->insertGetId(['code' => 'CAT_'.$code, 'name' => 'Kategori '.$name]);
-                $item = $modelClass::firstOrCreate(['code' => $code], ['name' => $name, 'service_category_id' => $catId, 'is_active' => true]);
+                $grp = DB::table('service_groups')->where('code', 'GRP_'.$code)->first();
+                $grpId = $grp ? $grp->id : DB::table('service_groups')->insertGetId(['code' => 'GRP_'.$code, 'name' => 'Golongan '.$name, 'is_active' => true, 'created_at' => now(), 'updated_at' => now()]);
+                $item = $modelClass::firstOrCreate(['code' => $code], ['name' => $name, 'service_group_id' => $grpId, 'is_active' => true]);
                 $tableName = 'service_tariffs';
                 $foreignId = 'medical_service_id';
             } else {

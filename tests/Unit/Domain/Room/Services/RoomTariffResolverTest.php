@@ -1,9 +1,9 @@
 <?php
 
-use App\Domain\Room\Models\RoomClass;
-use App\Domain\Room\Models\RoomTariff;
-use App\Domain\Room\Models\RoomTariffType;
-use App\Domain\Room\Services\RoomTariffResolver;
+use App\Models\Room\RoomClass;
+use App\Models\Room\RoomTariff;
+use App\Models\Room\RoomTariffType;
+use App\Services\Room\RoomTariffResolver;
 use Carbon\Carbon;
 
 it('resolves active room tariff for a specific date', function () {

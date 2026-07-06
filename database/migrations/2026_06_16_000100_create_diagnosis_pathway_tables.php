@@ -19,7 +19,7 @@ return new class extends Migration
         Schema::create('diagnosis_pathway_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('diagnosis_pathway_id')->constrained('diagnosis_pathways')->cascadeOnDelete();
-            $table->string('item_type', 100)->comment('App\Models\Room\RoomTariffType, App\Models\Patient\MedicalService, App\Models\Pharmacy\Medication');
+            $table->string('item_type', 100)->comment('App\Models\Room\RoomTariffType, App\Models\Service\MedicalService, App\Models\Medication\Medication');
             $table->unsignedBigInteger('item_id');
             $table->unsignedSmallInteger('quantity')->default(1);
             $table->timestamps();

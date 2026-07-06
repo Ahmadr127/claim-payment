@@ -48,11 +48,11 @@
         <form action="{{ route('services.index') }}" method="GET" class="w-full flex flex-col md:flex-row gap-4">
             
             <div class="w-full md:w-1/3">
-                <select name="category_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5" onchange="this.form.submit()">
-                    <option value="">-- Semua Kategori --</option>
-                    @foreach($categories as $cat)
-                        <option value="{{ $cat->id }}" {{ $categoryId == $cat->id ? 'selected' : '' }}>
-                            {{ $cat->name }}
+                <select name="group_id" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5" onchange="this.form.submit()">
+                    <option value="">-- Semua Golongan --</option>
+                    @foreach($groups as $g)
+                        <option value="{{ $g->id }}" {{ $groupId == $g->id ? 'selected' : '' }}>
+                            {{ $g->name }}
                         </option>
                     @endforeach
                 </select>
@@ -80,9 +80,11 @@
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">No</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Kode</th>
                         <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama Layanan</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Kategori</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Golongan</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Satuan</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Status</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-40">Dibuat</th>
+                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-40">Diubah</th>
                         <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
                     </tr>
                 </thead>
@@ -94,7 +96,7 @@
                             <td class="px-6 py-4 text-gray-900 font-semibold">{{ $svc->name }}</td>
                             <td class="px-6 py-4">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-                                    {{ $svc->serviceCategory->name ?? '-' }}
+                                    {{ $svc->serviceGroup->name ?? '-' }}
                                 </span>
                             </td>
                             <td class="px-6 py-4 text-center text-gray-500">{{ $svc->unit }}</td>
@@ -103,6 +105,18 @@
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Aktif</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Nonaktif</span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4 text-xs text-gray-500">
+                                <div class="font-medium text-gray-700">{{ $svc->creator->name ?? 'System' }}</div>
+                                <div class="text-[10px] text-gray-400 mt-0.5">{{ $svc->created_at ? $svc->created_at->format('d/m/Y H:i') : '-' }}</div>
+                            </td>
+                            <td class="px-6 py-4 text-xs text-gray-500">
+                                @if($svc->updated_at && $svc->updated_at != $svc->created_at)
+                                    <div class="font-medium text-gray-700">{{ $svc->editor->name ?? 'System' }}</div>
+                                    <div class="text-[10px] text-gray-400 mt-0.5">{{ $svc->updated_at->format('d/m/Y H:i') }}</div>
+                                @else
+                                    <span class="text-gray-400 italic">-</span>
                                 @endif
                             </td>
                             <td class="px-6 py-4 text-center">
@@ -122,7 +136,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500">
+                            <td colspan="9" class="px-6 py-10 text-center text-gray-500">
                                 <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                 <p>Tidak ada data layanan medis.</p>
                             </td>

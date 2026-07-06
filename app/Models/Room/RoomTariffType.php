@@ -11,4 +11,9 @@ class RoomTariffType extends Model
     use HasFactory, HasAuditLog;
 
     protected $guarded = ['id'];
+
+    protected static function newFactory()
+    {
+        return \Database\Factories\Models\Room\RoomTariffTypeFactory::new();
+    }
 }

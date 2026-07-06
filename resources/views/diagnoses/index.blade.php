@@ -30,7 +30,7 @@
             searchPlaceholder="Cari Kode/Nama Diagnosa..." 
             :showFilter="true" 
             :showExport="true" 
-            addAction="#" />
+            addAction="{{ route('diagnoses.pathway.create') }}" />
 
         {{-- Table --}}
         <div class="overflow-x-auto">
@@ -42,7 +42,8 @@
                         <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">NAMA DIAGNOSA</th>
                         <th scope="col" class="px-6 py-4 text-center font-semibold text-gray-500 uppercase tracking-wider">LAMA RAWAT</th>
                         <th scope="col" class="px-6 py-4 text-center font-semibold text-gray-500 uppercase tracking-wider">JUMLAH ADMIN</th>
-                        <th scope="col" class="px-6 py-4 text-center font-semibold text-gray-500 uppercase tracking-wider">TGL DI UPDATE</th>
+                        <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">Dibuat</th>
+                        <th scope="col" class="px-6 py-4 text-left font-semibold text-gray-500 uppercase tracking-wider">Diubah</th>
                         <th scope="col" class="px-6 py-4 text-center font-semibold text-gray-500 uppercase tracking-wider">STATUS TARIF</th>
                         <th scope="col" class="px-6 py-4 text-right font-semibold text-gray-500 uppercase tracking-wider">AKSI</th>
                     </tr>
@@ -54,7 +55,7 @@
                             <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900">{{ $diagnosis->icd_code }}</td>
                             <td class="px-6 py-4 whitespace-nowrap text-gray-600">{{ $diagnosis->name }}</td>
                             @php
-                                $pathway = \App\Models\Patient\DiagnosisPathway::where('diagnosis_id', $diagnosis->id)->first();
+                                $pathway = \App\Models\ClinicalPathway\DiagnosisPathway::where('diagnosis_id', $diagnosis->id)->first();
                             @endphp
                             <td class="px-6 py-4 whitespace-nowrap text-center text-gray-600">
                                 {{ $pathway ? $pathway->length_of_stay . ' Hari' : '-' }}
@@ -62,8 +63,17 @@
                             <td class="px-6 py-4 whitespace-nowrap text-center text-gray-600">
                                 {{ $diagnosis->admin_fee_percentage ? (float)$diagnosis->admin_fee_percentage . '%' : '-' }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-center text-gray-500 text-sm">
-                                {{ $diagnosis->updated_at ? $diagnosis->updated_at->format('d/m/Y H:i') : '-' }}
+                            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                <div class="font-medium text-gray-700">{{ $diagnosis->creator->name ?? 'System' }}</div>
+                                <div class="text-[10px] text-gray-400 mt-0.5">{{ $diagnosis->created_at ? $diagnosis->created_at->format('d/m/Y H:i') : '-' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-xs text-gray-500">
+                                @if($diagnosis->updated_at && $diagnosis->updated_at != $diagnosis->created_at)
+                                    <div class="font-medium text-gray-700">{{ $diagnosis->editor->name ?? 'System' }}</div>
+                                    <div class="text-[10px] text-gray-400 mt-0.5">{{ $diagnosis->updated_at->format('d/m/Y H:i') }}</div>
+                                @else
+                                    <span class="text-gray-400 italic">-</span>
+                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-center">
                                 @if($pathway)
@@ -88,7 +98,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 whitespace-nowrap text-center">
+                            <td colspan="9" class="px-6 py-12 whitespace-nowrap text-center">
                                 <div class="flex flex-col items-center justify-center text-gray-500">
                                     <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                     <p class="text-sm">Data diagnosa tidak ditemukan.</p>

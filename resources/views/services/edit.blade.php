@@ -62,11 +62,11 @@
                     </div>
 
                     <div>
-                        <label class="block mb-2 text-sm font-medium text-gray-900">Kategori <span class="text-red-500">*</span></label>
-                        <select name="service_category_id" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
-                            <option value="">-- Pilih Kategori --</option>
-                            @foreach($categories as $cat)
-                                <option value="{{ $cat->id }}" {{ old('service_category_id', $service->service_category_id) == $cat->id ? 'selected' : '' }}>{{ $cat->name }}</option>
+                        <label class="block mb-2 text-sm font-medium text-gray-900">Golongan <span class="text-red-500">*</span></label>
+                        <select name="service_group_id" required class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5">
+                            <option value="">-- Pilih Golongan --</option>
+                            @foreach($groups as $g)
+                                <option value="{{ $g->id }}" {{ old('service_group_id', $service->service_group_id) == $g->id ? 'selected' : '' }}>{{ $g->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -85,56 +85,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">
-            <div class="bg-slate-50 px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                <h2 class="text-lg font-semibold text-gray-800">Tarif Berdasarkan Kelas Kamar</h2>
-                <span class="text-xs text-gray-500 font-normal bg-white px-2 py-1 rounded border border-gray-200">Kosongkan jika tidak ada tarif di kelas tersebut</span>
-            </div>
-            
-            <div class="p-0 overflow-x-auto">
-                <table class="min-w-full text-sm divide-y divide-gray-200">
-                    <thead class="bg-white">
-                        <tr>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600 w-1/3">Kelas Kamar</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Tarif Saat Ini (Rp)</th>
-                            <th class="px-6 py-3 text-left font-semibold text-gray-600">Update Tarif (Rp)</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-100 bg-gray-50/30">
-                        @foreach($roomClasses as $rc)
-                            @php
-                                $tariff = $currentTariffs->get($rc->id);
-                                $amount = $tariff ? $tariff->amount : '';
-                            @endphp
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="font-medium text-gray-900">{{ $rc->name }}</div>
-                                    <div class="text-xs text-gray-500">{{ $rc->code }}</div>
-                                </td>
-                                <td class="px-6 py-4 text-gray-600">
-                                    @if($amount !== '')
-                                        Rp {{ number_format($amount, 0, ',', '.') }}
-                                    @else
-                                        <span class="text-gray-400 italic">Belum diatur</span>
-                                    @endif
-                                </td>
-                                <td class="px-6 py-4">
-                                    <div class="relative w-full max-w-xs">
-                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <span class="text-gray-500 sm:text-sm">Rp</span>
-                                        </div>
-                                        <input type="number" name="tariffs[{{ $rc->id }}]" value="{{ old('tariffs.'.$rc->id, $amount) }}" min="0" 
-                                               class="pl-10 block w-full rounded-lg border-gray-300 bg-white border text-gray-900 focus:ring-green-500 focus:border-green-500 sm:text-sm p-2.5" 
-                                               placeholder="0">
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
             </div>
         </div>
 
