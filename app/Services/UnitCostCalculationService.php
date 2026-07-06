@@ -61,24 +61,15 @@ class UnitCostCalculationService
                     $baseAmount = $amount;
                     $hna = $amount;
                 } elseif ($type === 'MedicalService') {
-                    // Jasa Medis: room_tariff_amount × percentage
-                    // Cari room tariff pertama (baseline) untuk perhitungan
-                    $kamarType = DB::table('room_tariff_types')
-                        ->where('code', '1')
-                        ->orWhere('code', '1001')
-                        ->orWhere('name', 'like', '%Kamar Rawat%')
-                        ->first();
-
-                    $roomTariff = DB::table('room_tariffs')
+                    // Jasa Medis: service_tariff_amount × percentage
+                    $tariff = DB::table('service_tariffs')
+                        ->where('medical_service_id', $item->id)
                         ->where('room_class_id', $rc->id)
-                        ->when($kamarType, function($q) use ($kamarType) {
-                            return $q->where('room_tariff_type_id', $kamarType->id);
-                        })
                         ->where('is_active', true)
                         ->latest('effective_date')
                         ->first();
                     
-                    $baseAmount = $roomTariff?->amount ?? 0;
+                    $baseAmount = $tariff?->amount ?? 0;
                     $percentage = $item->percentage ?? 70; // Default 70%
                     $amount = (int) round($baseAmount * ($percentage / 100));
                     $hna = $baseAmount;
