@@ -118,6 +118,14 @@ Route::middleware('auth')->group(function () {
             ->name('unit-cost.simulation.export-pdf');
         Route::get('/unit-cost/{organizationUnit}/{diagnosis}/export-excel', [\App\Http\Controllers\UnitCostSimulationController::class, 'exportExcel'])
             ->name('unit-cost.simulation.export-excel');
+
+        // Master Unit Cost Tariffs
+        Route::resource('unit-cost-service-prices', \App\Http\Controllers\UnitCostServicePriceController::class)
+            ->parameters(['unit-cost-service-prices' => 'service'])
+            ->only(['index', 'edit', 'update']);
+        Route::resource('unit-cost-medication-prices', \App\Http\Controllers\UnitCostMedicationPriceController::class)
+            ->parameters(['unit-cost-medication-prices' => 'medication'])
+            ->only(['index', 'edit', 'update']);
     });
 
 });

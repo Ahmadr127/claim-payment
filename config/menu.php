@@ -92,8 +92,30 @@ return [
         'title' => 'Unit Cost',
         'icon' => 'fas fa-calculator',
         'permission' => 'view_unit_cost',
-        'active' => 'unit-cost.*',
-        'route' => 'unit-cost.index',
+        'active' => ['unit-cost.*', 'unit-cost-service-prices.*', 'unit-cost-medication-prices.*'],
+        'children' => [
+            [
+                'title' => 'Simulasi Unit Cost',
+                'icon' => 'fas fa-chart-line',
+                'route' => 'unit-cost.index',
+                'permission' => 'view_unit_cost',
+                'active' => 'unit-cost.*',
+            ],
+            [
+                'title' => 'Tarif Layanan Medis',
+                'icon' => 'fas fa-money-bill-wave',
+                'route' => 'unit-cost-service-prices.index',
+                'permission' => 'view_unit_cost',
+                'active' => 'unit-cost-service-prices.*',
+            ],
+            [
+                'title' => 'Tarif & Harga Obat',
+                'icon' => 'fas fa-money-bill-wave',
+                'route' => 'unit-cost-medication-prices.index',
+                'permission' => 'view_unit_cost',
+                'active' => 'unit-cost-medication-prices.*',
+            ],
+        ],
     ],
     [
         'title' => 'Master Data',
