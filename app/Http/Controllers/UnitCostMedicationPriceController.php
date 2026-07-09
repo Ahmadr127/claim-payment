@@ -15,7 +15,7 @@ class UnitCostMedicationPriceController extends Controller
         $search = $request->input('q');
         $categoryId = $request->input('category_id');
 
-        $medications = Medication::with(['medicationCategory', 'group', 'creator', 'editor'])
+        $medications = Medication::with(['medicationCategory', 'tariffs'])
             ->when($search, function ($query, $search) {
                 return $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -29,8 +29,9 @@ class UnitCostMedicationPriceController extends Controller
             ->paginate(10);
 
         $categories = MedicationCategory::where('is_active', true)->orderBy('name')->get();
+        $roomClasses = RoomClass::where('is_active', true)->orderBy('display_order')->get();
 
-        return view('unit-cost.medication-prices.index', compact('medications', 'search', 'categoryId', 'categories'));
+        return view('unit-cost.medication-prices.index', compact('medications', 'search', 'categoryId', 'categories', 'roomClasses'));
     }
 
     public function edit(Medication $medication)

@@ -76,11 +76,11 @@
             </div>
         </div>
 
-        <!-- Tabel Perbandingan Tarif Penjualan (Read-Only) -->
+        <!-- Simulasi Tarif Unit Cost per Kelas Kamar -->
         <div class="bg-white shadow-sm border border-gray-200 rounded-lg mb-6 overflow-hidden">
             <div class="bg-slate-50 px-6 py-4 border-b border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800">Perbandingan dengan Tarif Penjualan Umum</h2>
-                <p class="text-xs text-gray-500 mt-0.5">Berikut adalah tarif jual umum saat ini di masing-masing kelas kamar untuk perbandingan</p>
+                <h2 class="text-lg font-semibold text-gray-800">Tarif Unit Cost per Kelas Kamar</h2>
+                <p class="text-xs text-gray-500 mt-0.5">Berikut adalah simulasi tarif unit cost (HNA + PPN) di masing-masing kelas kamar berdasarkan nilai HNA dan PPN di atas</p>
             </div>
             
             <div class="p-0 overflow-x-auto">
@@ -88,26 +88,17 @@
                     <thead class="bg-slate-50">
                         <tr>
                             <th class="px-6 py-3 text-left font-semibold text-gray-600 w-1/2">Kelas Kamar</th>
-                            <th class="px-6 py-3 text-right font-semibold text-gray-600 w-1/2">Tarif Penjualan Umum Saat Ini (Rp)</th>
+                            <th class="px-6 py-3 text-right font-semibold text-teal-800 w-1/2">Tarif Unit Cost Hasil Kalkulasi (Rp)</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-100 bg-white">
                         @foreach($roomClasses as $rc)
-                            @php
-                                $genTariff = $generalTariffs->get($rc->id);
-                                $genAmount = $genTariff ? $genTariff->amount : null;
-                            @endphp
                             <tr class="hover:bg-slate-50 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="font-medium text-gray-900">{{ $rc->name }}</div>
                                     <div class="text-xs text-gray-500">{{ $rc->code }}</div>
                                 </td>
-                                <td class="px-6 py-4 text-right text-gray-900 font-semibold text-base">
-                                    @if($genAmount !== null)
-                                        Rp {{ number_format($genAmount, 0, ',', '.') }}
-                                    @else
-                                        <span class="text-gray-400 italic font-normal text-sm">Belum diatur</span>
-                                    @endif
+                                <td class="px-6 py-4 text-right font-bold text-teal-600 text-base" x-text="formattedAmount">
                                 </td>
                             </tr>
                         @endforeach

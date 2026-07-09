@@ -15,7 +15,7 @@ class UnitCostServicePriceController extends Controller
         $search = $request->input('q');
         $groupId = $request->input('group_id');
 
-        $services = MedicalService::with(['serviceGroup', 'creator', 'editor'])
+        $services = MedicalService::with(['serviceGroup', 'tariffs'])
             ->when($search, function ($query, $search) {
                 return $query->where(function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%")
@@ -29,8 +29,9 @@ class UnitCostServicePriceController extends Controller
             ->paginate(10);
 
         $groups = ServiceGroup::where('is_active', true)->orderBy('name')->get();
+        $roomClasses = RoomClass::where('is_active', true)->orderBy('display_order')->get();
 
-        return view('unit-cost.service-prices.index', compact('services', 'search', 'groupId', 'groups'));
+        return view('unit-cost.service-prices.index', compact('services', 'search', 'groupId', 'groups', 'roomClasses'));
     }
 
     public function edit(MedicalService $service)

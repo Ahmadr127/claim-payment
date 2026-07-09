@@ -5,7 +5,7 @@
 @section('content')
 <div class="w-full mx-auto pb-10">
     <!-- Header -->
-    <div class="mb-6 flex flex-col md:flex-row md:items-center justify-between space-y-4 md:space-y-0">
+    <div class="mb-6 flex flex-col md:flex-row md:items-end justify-between space-y-4 md:space-y-0">
         <div>
             <nav class="flex text-sm text-gray-500 mb-2" aria-label="Breadcrumb">
                 <ol class="inline-flex items-center space-x-1 md:space-x-2">
@@ -22,6 +22,11 @@
             </nav>
             <h1 class="text-2xl font-bold text-gray-900">Tarif Layanan Medis (Unit Cost)</h1>
             <p class="text-sm text-gray-500 mt-1">Kelola data tarif unit cost dasar tindakan atau layanan medis per kelas kamar</p>
+        </div>
+        <!-- Rumus Unit Cost di Kanan Atas -->
+        <div class="bg-teal-50 border border-teal-200 text-teal-900 px-3 py-2 rounded-lg text-xs shadow-sm flex items-center gap-2 self-start md:self-auto">
+            <i class="fas fa-info-circle text-teal-600"></i>
+            <span><strong>Rumus Unit Cost:</strong> Tarif Dasar (HNA) × % SVC = Tarif UC Akhir</span>
         </div>
     </div>
 
@@ -70,42 +75,66 @@
     <!-- Table -->
     <div class="bg-white rounded-b-lg shadow-sm border border-gray-200 overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 text-sm">
-                <thead class="bg-slate-50">
+            <table class="min-w-full divide-y divide-gray-200 text-sm border-collapse">
+                <thead class="bg-slate-50 border-b border-gray-200">
                     <tr>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-16">No</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Kode Layanan</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama Layanan / Tindakan</th>
-                        <th class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-40">Golongan</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Satuan</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-24">Status</th>
-                        <th class="px-6 py-4 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-32">Aksi</th>
+                        <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-16 border-r border-gray-200">No</th>
+                        <th rowspan="2" class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-24 border-r border-gray-200">Kode</th>
+                        <th rowspan="2" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider border-r border-gray-200">Nama Layanan / Tindakan</th>
+                        <th rowspan="2" class="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider w-36 border-r border-gray-200">Golongan</th>
+                        <th rowspan="2" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-20 border-r border-gray-200">Satuan</th>
+                        <th rowspan="2" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-20 border-r border-gray-200">% SVC</th>
+                        <th colspan="{{ $roomClasses->count() }}" class="px-6 py-2 text-center text-xs font-bold text-teal-800 uppercase tracking-wider border-b border-gray-200">Tarif Unit Cost (Rp)</th>
+                        <th rowspan="2" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-20 border-l border-gray-200">Status</th>
+                        <th rowspan="2" class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase tracking-wider w-28 border-l border-gray-200">Aksi</th>
+                    </tr>
+                    <tr class="bg-slate-50/50">
+                        @foreach($roomClasses as $rc)
+                            <th class="px-3 py-2 text-center text-[10px] font-semibold text-gray-500 uppercase tracking-wider border-r border-gray-200 last:border-r-0">{{ $rc->name }}</th>
+                        @endforeach
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
                     @forelse($services as $index => $srv)
                         <tr class="hover:bg-slate-50 transition-colors">
-                            <td class="px-6 py-4 text-gray-500">{{ $services->firstItem() + $index }}</td>
-                            <td class="px-6 py-4 text-gray-900 font-medium">{{ $srv->code }}</td>
-                            <td class="px-6 py-4 text-gray-900 font-semibold">{{ $srv->name }}</td>
-                            <td class="px-6 py-4 text-gray-700">{{ $srv->serviceGroup->name ?? '-' }}</td>
-                            <td class="px-6 py-4 text-center text-gray-500">{{ $srv->unit }}</td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="px-4 py-4 text-gray-500 border-r border-gray-100 text-center">{{ $services->firstItem() + $index }}</td>
+                            <td class="px-4 py-4 text-gray-900 font-medium border-r border-gray-100 text-center font-mono">{{ $srv->code }}</td>
+                            <td class="px-6 py-4 text-gray-900 font-semibold border-r border-gray-100">{{ $srv->name }}</td>
+                            <td class="px-6 py-4 text-gray-700 border-r border-gray-100">{{ $srv->serviceGroup->name ?? '-' }}</td>
+                            <td class="px-4 py-4 text-center text-gray-500 border-r border-gray-100">{{ $srv->unit }}</td>
+                            <td class="px-4 py-4 text-center font-bold text-teal-600 border-r border-gray-100 bg-teal-50/20">{{ number_format($srv->percentage, 1) }}%</td>
+                            @foreach($roomClasses as $rc)
+                                @php
+                                    $tariff = $srv->tariffs->where('room_class_id', $rc->id)->where('is_active', true)->first();
+                                    $baseAmount = $tariff ? $tariff->amount : 0;
+                                    $percentage = $srv->percentage ?? 70;
+                                    $ucAmount = (int) round($baseAmount * ($percentage / 100));
+                                @endphp
+                                <td class="px-3 py-4 text-right font-medium text-gray-900 border-r border-gray-100">
+                                    @if($baseAmount > 0)
+                                        <span class="text-gray-900 block font-bold">Rp{{ number_format($ucAmount, 0, ',', '.') }}</span>
+                                        <span class="block text-[9px] text-gray-400 font-normal mt-0.5">Base: {{ number_format($baseAmount, 0, ',', '.') }}</span>
+                                    @else
+                                        <span class="text-gray-400 italic text-xs block text-center">-</span>
+                                    @endif
+                                </td>
+                            @endforeach
+                            <td class="px-4 py-4 text-center border-l border-gray-100">
                                 @if($srv->is_active)
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Aktif</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">Nonaktif</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-4 text-center">
-                                <a href="{{ route('unit-cost-service-prices.edit', $srv->id) }}" class="text-teal-600 hover:text-teal-900 font-medium inline-flex items-center gap-1.5 transition-colors" title="Kelola Tarif Unit Cost">
-                                    <i class="fas fa-calculator"></i> Kelola Tarif UC
+                            <td class="px-4 py-4 text-center border-l border-gray-100">
+                                <a href="{{ route('unit-cost-service-prices.edit', $srv->id) }}" class="text-teal-600 hover:text-teal-900 font-medium inline-flex items-center gap-1.5 transition-colors text-xs" title="Kelola Tarif Unit Cost">
+                                    <i class="fas fa-edit"></i> Edit UC
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-10 text-center text-gray-500">
+                            <td colspan="{{ 8 + $roomClasses->count() }}" class="px-6 py-10 text-center text-gray-500">
                                 <i class="fas fa-folder-open text-4xl mb-3 text-gray-300"></i>
                                 <p>Tidak ada data layanan medis.</p>
                             </td>
